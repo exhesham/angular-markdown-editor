@@ -3,11 +3,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import {MatSnackBar} from "@angular/material";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: 'app-toolbar',
+  templateUrl: './toolbar.component.html',
+  styleUrls: ['./toolbar.component.css']
 })
-export class AppComponent {
+export class ToolbarComponent {
   title = 'app';
   constructor(public snackBar: MatSnackBar) {}
 

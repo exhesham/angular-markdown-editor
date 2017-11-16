@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { AppComponent } from './app.component';
+import { ToolbarComponent } from './toolbar.component';
+import { EditorComponent } from './editor.component';
 import {
   MatAutocompleteModule,
   MatButtonModule,
@@ -35,18 +36,19 @@ import {
   MatTooltipModule,
   MatStepperModule,
 } from '@angular/material';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+// import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
-    AppComponent
+    ToolbarComponent,
+    EditorComponent
   ],
   imports: [
     BrowserModule,
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
-    BrowserAnimationsModule,
+  //  BrowserAnimationsModule,
     MatCardModule,
     MatCheckboxModule,
     MatChipsModule,
@@ -111,6 +113,6 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     MatTooltipModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [ToolbarComponent, EditorComponent]
 })
 export class AppModule { }
