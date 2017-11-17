@@ -1,14 +1,14 @@
-import { MarkdownEditorPage } from './app.po';
+import { AppPage } from './app.po';
 
-describe('markdown-editor App', () => {
-  let page: MarkdownEditorPage;
+describe('electron-markdown-editor App', () => {
+  let page: AppPage;
 
   beforeEach(() => {
-    page = new MarkdownEditorPage();
+    page = new AppPage();
   });
 
   it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to app!!');
+    expect(page.getParagraphText()).toEqual('Welcome to app!');
   });
 });
