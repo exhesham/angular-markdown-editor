@@ -11,6 +11,7 @@ import {
   MatChipsModule,
   MatDatepickerModule,
   MatDialogModule,
+
   MatExpansionModule,
   MatGridListModule,
   MatIconModule,
@@ -36,7 +37,7 @@ import {
   MatTooltipModule,
   MatStepperModule,
 } from '@angular/material';
-// import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -48,7 +49,7 @@ import {
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
-  //  BrowserAnimationsModule,
+    BrowserAnimationsModule,
     MatCardModule,
     MatCheckboxModule,
     MatChipsModule,

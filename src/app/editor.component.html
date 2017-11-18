@@ -1,1 +1,18 @@
-<textarea>abc<i>sss</i></textarea>
+<!--<div (keypress)="editor_keypress($event)"  #richtextbox>-->
+  <!--<p contenteditable="true">aa<i>ddd</i>aaa</p>-->
+<!--</div>-->
+
+<ng-container #richtextbox>
+</ng-container>
+<div #abcd></div>
+<ng-template #p_dom>
+  <p contenteditable="true" (keypress)="editor_keypress($event)">zzz</p>
+</ng-template>
+
+<ng-template #quote_dom>
+  <blockquote contenteditable="true" (keypress)="editor_keypress($event)"></blockquote>
+</ng-template>
+
+<ng-template #bold_dom>
+  <b contenteditable="true" (keypress)="editor_keypress($event)"></b>
+</ng-template>
