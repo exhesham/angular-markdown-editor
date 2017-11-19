@@ -48,17 +48,18 @@ export class EditorComponent  implements AfterViewInit {
     return this.last_focused_element
   }
   apply_bold(event){
-    let focused_element = this.get_focused_element();
-
-    let [start_offset, last_offset] = this.get_caret_position(focused_element);    // get the selected text
-    let native_val = focused_element.innerText;  // get the text itself
+    let focused_element = window.getSelection().focusNode;
+    let [start_offset, last_offset] = this.get_caret_position();    // get the selected text
+    let native_val = window.getSelection().focusNode.nodeValue;  // get the text itself
+    console.log('native_val:',native_val)
     let left_val = native_val.substring(0,start_offset);   // need to split the string
     let right_val = last_offset <= native_val.length? native_val.substring(last_offset) : '';  // empty string if the caret is at the end of the element
     let parent = focused_element.parentElement;
     console.log('start_offset, last_offset:',start_offset, last_offset)
-    console.log('native_val:',native_val)
+
     console.log('left_val:',left_val)
     console.log('right_val:',right_val)
+    console.log('focused:',focused_element)
     console.log('parent of focused:',parent)
     let new_wrapper_child = this.inject_new_element(ElementType.p, '',parent)
     let selected_substring = native_val.substring(start_offset, last_offset);
@@ -69,11 +70,11 @@ export class EditorComponent  implements AfterViewInit {
     this.renderer.removeChild(focused_element.parentElement, focused_element)
     bold.focus();
   }
-  get_caret_position(doc: any){
+  get_caret_position(){
     var win = window;
     var caretOffset = 0;
     var sel = win.getSelection();
-    doc.focus()
+
     return [Math.min(sel.focusOffset,sel.anchorOffset), Math.max(sel.focusOffset,sel.anchorOffset)]
   }
 
