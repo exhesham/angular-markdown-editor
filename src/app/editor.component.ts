@@ -49,19 +49,20 @@ export class EditorComponent  implements AfterViewInit {
   }
   apply_bold(event){
     let focused_element = window.getSelection().focusNode;
+    let parent = focused_element.parentElement;
     let [start_offset, last_offset] = this.get_caret_position();    // get the selected text
     let native_val = window.getSelection().focusNode.nodeValue;  // get the text itself
     console.log('native_val:',native_val)
     let left_val = native_val.substring(0,start_offset);   // need to split the string
     let right_val = last_offset <= native_val.length? native_val.substring(last_offset) : '';  // empty string if the caret is at the end of the element
-    let parent = focused_element.parentElement;
+
     console.log('start_offset, last_offset:',start_offset, last_offset)
 
     console.log('left_val:',left_val)
     console.log('right_val:',right_val)
     console.log('focused:',focused_element)
     console.log('parent of focused:',parent)
-    let new_wrapper_child = this.inject_new_element(ElementType.p, '',parent)
+    let new_wrapper_child = parent
     let selected_substring = native_val.substring(start_offset, last_offset);
     let left_element = this.inject_new_element(ElementType.span,left_val, new_wrapper_child);   // put the right substring in a new element right to the bold
     let bold = this.inject_new_element(ElementType.bold,selected_substring, new_wrapper_child );   // create bold dom
