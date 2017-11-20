@@ -28,8 +28,8 @@ export class EditorComponent implements AfterViewInit {
 
   @ViewChild('richtextbox', {read: ViewContainerRef}) richtextbox: ViewContainerRef;
   @ViewChild('p_dom') p_dom;
-  @ViewChild('abcd')
-  private abcd: ElementRef;
+  @ViewChild('abcd', {read: ElementRef}) abcd: ElementRef;
+
   private last_focused_element: any;
 
   constructor(private renderer: Renderer2) {
@@ -39,7 +39,8 @@ export class EditorComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.renderer.parentNode(this.richtextbox)
     let p = this.inject_new_element(ElementType.p, 'I am a text', this.abcd.nativeElement);
-    p.focus()
+    this.inject_new_element(ElementType.bold, ' and this part is bold', p);
+
 
 
   }
@@ -52,11 +53,17 @@ export class EditorComponent implements AfterViewInit {
   apply_bold(event, focusable) {
     let focused_element = window.getSelection().focusNode;
     let parent = focused_element.parentElement;
+    console.log('focused_element children:',window.getSelection().rangeCount)
+
     let ancestor = focused_element.parentElement.parentElement;
     let [start_offset, last_offset] = this.get_caret_position();    // get the selected text
     let native_val = window.getSelection().focusNode.nodeValue;  // get the text itself
     let left_val = native_val.substring(0, start_offset);   // need to split the string
     let right_val = last_offset <= native_val.length ? native_val.substring(last_offset) : '';  // empty string if the caret is at the end of the element
+    const inputElem = <HTMLElement>this.abcd.nativeElement;
+
+
+    // console.log('focused_element:',window.getSelection().containsNode(, true))
 
     console.log('focused_element:',focused_element)
     console.log('parent:',parent)
@@ -130,14 +137,10 @@ export class EditorComponent implements AfterViewInit {
         break;
     }
     let new_element = this.renderer.createElement(name)
-
     const text_element = this.renderer.createText(text);
     this.renderer.appendChild(new_element, text_element);
     this.renderer.appendChild(parent, new_element);
     this.renderer.setAttribute(new_element, 'contenteditable', 'true')
-    this.renderer.listen(new_element, 'keypress', this.keypress_decorator(new_element));
-    this.renderer.listen(new_element, 'click', this.click_decorator(new_element));
-    // this.renderer.listen(new_element, 'focus', this.focus_decorator(new_element));
     new_element.focus()
     return new_element;
   }
