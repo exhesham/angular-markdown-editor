@@ -142,6 +142,7 @@ export class EditorComponent implements AfterViewInit {
   }
   create_table() {
     // source: https://www-archive.mozilla.org/editor/midasdemo/
+    // https://developer.mozilla.org/en-US/docs/Rich-Text_Editing_in_Mozilla#Executing_Commands
     let e = document.getSelection().focusNode;
     let rowstext = prompt("enter rows");
     let colstext = prompt("enter cols");
