@@ -3,3 +3,10 @@
   border:none;
   outline:none;
 }
+.spacer-icon {
+  padding: 0 14px;
+}
+
+.title-spacer {
+  flex: 1 1 auto;
+}

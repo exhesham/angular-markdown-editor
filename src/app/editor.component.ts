@@ -5,6 +5,8 @@ import {
   AfterViewInit, Component, ElementRef, Renderer2, ViewChild,
   ViewContainerRef
 } from '@angular/core';
+import {DialogOverviewExampleDialog} from "./dialog-link/link.component";
+import {MatDialog} from "@angular/material";
 
 
 enum ElementType {
@@ -28,74 +30,78 @@ export class EditorComponent implements AfterViewInit {
 
   @ViewChild('richtextbox', {read: ViewContainerRef}) richtextbox: ViewContainerRef;
   @ViewChild('p_dom') p_dom;
-  @ViewChild('abcd', {read: ElementRef}) abcd: ElementRef;
-
+  @ViewChild('abcd')
+  private abcd: ElementRef;
   private last_focused_element: any;
 
-  constructor(private renderer: Renderer2) {
+  constructor(private renderer: Renderer2,public dialog: MatDialog) {
 
   }
 
   ngAfterViewInit(): void {
     this.renderer.parentNode(this.richtextbox)
     let p = this.inject_new_element(ElementType.p, 'I am a text', this.abcd.nativeElement);
-    this.inject_new_element(ElementType.bold, ' and this part is bold', p);
-
+    p.focus()
 
 
   }
 
   get_focused_element(): any {
-    console.log(this.last_focused_element)
-    return this.last_focused_element
+    return window.getSelection().focusNode;
   }
 
-  apply_bold(event, focusable) {
-    let focused_element = window.getSelection().focusNode;
-    let parent = focused_element.parentElement;
-    console.log('focused_element children:',window.getSelection().rangeCount)
+  get_selection_text() {
+    var min = 0;
+    var max = 0;
+    var text = "";
+    var ranges = [];
 
-    let ancestor = focused_element.parentElement.parentElement;
-    let [start_offset, last_offset] = this.get_caret_position();    // get the selected text
-    let native_val = window.getSelection().focusNode.nodeValue;  // get the text itself
-    let left_val = native_val.substring(0, start_offset);   // need to split the string
-    let right_val = last_offset <= native_val.length ? native_val.substring(last_offset) : '';  // empty string if the caret is at the end of the element
-    const inputElem = <HTMLElement>this.abcd.nativeElement;
+    if (window.getSelection) {
+      text = window.getSelection().toString();
+      min = window.getSelection().focusOffset
+      max = window.getSelection().anchorOffset
+      for(let i = 0;i<window.getSelection().rangeCount;i++){
+        ranges.push(window.getSelection().getRangeAt(i).commonAncestorContainer)
+      }
+    } else if (document.getSelection() && document.getSelection().type != "Control") {
+      let text = document.createRange();
+      ranges.push(text.commonAncestorContainer);
+      min = document.getSelection().focusOffset
+      max = document.getSelection().anchorOffset
 
-
-    // console.log('focused_element:',window.getSelection().containsNode(, true))
-
-    console.log('focused_element:',focused_element)
-    console.log('parent:',parent)
-    console.log('ancestor:',ancestor)
-    console.log('native_val:',native_val)
-    console.log('left_val:',left_val)
-    console.log('right_val:',right_val)
-
-    let new_wrapper_child = parent
-    let selected_substring = native_val.substring(start_offset, last_offset);
-    if (left_val) {
-      this.inject_new_element(ElementType.span, left_val, new_wrapper_child);   // put the right substring in a new element right to the bold
     }
-
-    let bold
-    if (parent.tagName.toLowerCase() == 'b') {
-      console.log('will unbold')
-      bold = this.inject_new_element(ElementType.span, selected_substring, new_wrapper_child.parentElement);   // create bold dom
-    } else {
-      bold = this.inject_new_element(ElementType.bold, selected_substring, new_wrapper_child);   // create bold dom
-    }
-    bold.focus();
-    if (right_val) {
-      this.inject_new_element(ElementType.span, right_val, new_wrapper_child);   // put the right substring in a new element right to the bold
-    }
-
-    this.renderer.removeChild(focused_element.parentElement, focused_element)
-    console.log('will focus on ', bold)
-
-
+    return [Math.min(min,max),
+      Math.max(min,max),
+      text, ranges];
   }
 
+  apply_bold(event) {
+    //https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
+    document.execCommand('bold');
+  }
+  apply_italic(event) {
+    //https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
+    document.execCommand('italic');
+  }
+  apply_underline(event) {
+    //https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
+    document.execCommand('underline');
+  }
+  animal: string;
+  name: string;
+  insert_link(){
+    console.log('insert link')
+
+    let dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+      width: '250px',
+      data: { name: this.name, animal: this.animal }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.animal = result;
+    });
+  }
   get_caret_position() {
     var win = window;
     var caretOffset = 0;
@@ -137,10 +143,14 @@ export class EditorComponent implements AfterViewInit {
         break;
     }
     let new_element = this.renderer.createElement(name)
+
     const text_element = this.renderer.createText(text);
     this.renderer.appendChild(new_element, text_element);
     this.renderer.appendChild(parent, new_element);
     this.renderer.setAttribute(new_element, 'contenteditable', 'true')
+    this.renderer.listen(new_element, 'keypress', this.keypress_decorator(new_element));
+    this.renderer.listen(new_element, 'click', this.click_decorator(new_element));
+    // this.renderer.listen(new_element, 'focus', this.focus_decorator(new_element));
     new_element.focus()
     return new_element;
   }
