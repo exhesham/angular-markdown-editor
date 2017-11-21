@@ -5,7 +5,7 @@ import {
   AfterViewInit, Component, ElementRef, Renderer2, ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import {DialogOverviewExampleDialog} from "./dialog-link/link.component";
+import {DialogLinkEdit} from "./dialog-link/link.component";
 import {MatDialog} from "@angular/material";
 
 
@@ -92,7 +92,7 @@ export class EditorComponent implements AfterViewInit {
   insert_link(){
     console.log('insert link')
 
-    let dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+    let dialogRef = this.dialog.open(DialogLinkEdit, {
       width: '250px',
       data: { name: this.name, animal: this.animal }
     });

@@ -5,13 +5,13 @@ import {Component, Inject} from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
 @Component({
-  selector: 'dialog-overview-example-dialog',
+  selector: 'dialog-link-edit',
   templateUrl: './link.component.html',
 })
-export class DialogOverviewExampleDialog {
+export class DialogLinkEdit {
 
   constructor(
-    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
+    public dialogRef: MatDialogRef<DialogLinkEdit>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   onNoClick(): void {

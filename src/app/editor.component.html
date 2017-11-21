@@ -7,8 +7,125 @@
   <button mat-icon-button><mat-icon >format_list_numbered</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_bold($event)">format_bold</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_italic($event)">format_italic</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="open_colors($event)">format_color_text</mat-icon></button>
+  <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon >format_color_text</mat-icon></button>
+  <mat-menu #menu="matMenu">
+    <mat-grid-list cols="10" rowHeight="1:1">
 
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 204, 204);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 230, 204);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 255, 204);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(204, 255, 204);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(204, 255, 230);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(204, 255, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(204, 230, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(204, 204, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(230, 204, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 204, 255);"></div></mat-grid-tile>
+
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 153, 153);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 204, 153);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 255, 153);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(153, 255, 153);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(153, 255, 204);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(153, 255, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(153, 204, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(153, 153, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(204, 153, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 153, 255);"></div></mat-grid-tile>
+
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 102, 102);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 179, 102);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 255, 102);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(102, 255, 102);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(102, 255, 179);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(102, 255, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(102, 179, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(102, 102, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(179, 102, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 102, 255);"></div></mat-grid-tile>
+
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 51, 51);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 153, 51);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 255, 51);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(51, 255, 51);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(51, 255, 153);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(51, 255, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(51, 153, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(51, 51, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(153, 51, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 51, 255);"></div></mat-grid-tile>
+
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 0, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 128, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 255, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 255, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 255, 128);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 255, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 128, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 0, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(128, 0, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 0, 255);"></div></mat-grid-tile>
+
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(245, 0, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(245, 123, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(245, 245, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 245, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 245, 123);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 245, 245);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 123, 245);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 0, 245);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(123, 0, 245);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(245, 0, 245);"></div></mat-grid-tile>
+
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(214, 0, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(214, 108, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(214, 214, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 214, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 214, 108);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 214, 214);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 108, 214);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 0, 214);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(108, 0, 214);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(214, 0, 214);"></div></mat-grid-tile>
+
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(163, 0, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(163, 82, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(163, 163, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 163, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 163, 82);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 163, 163);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 82, 163);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 0, 163);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(82, 0, 163);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(163, 0, 163);"></div></mat-grid-tile>
+
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(92, 0, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(92, 46, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(92, 92, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 92, 0);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 92, 46);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 92, 92);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 46, 92);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 0, 92);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(46, 0, 92);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(92, 0, 92);"></div></mat-grid-tile>
+
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(255, 255, 255);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(205, 205, 205);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(178, 178, 178);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(153, 153, 153);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(127, 127, 127);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(102, 102, 102);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(76, 76, 76);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(51, 51, 51);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(25, 25, 25);"></div></mat-grid-tile>
+      <mat-grid-tile><div class="flex-10" style="height: 25.5px; background-color: rgb(0, 0, 0);"></div></mat-grid-tile>
+
+
+
+
+    </mat-grid-list>
+  </mat-menu>
 
   <button mat-icon-button><mat-icon (click)="insert_link($event)">insert_link</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_underline($event)">format_quote</mat-icon></button>

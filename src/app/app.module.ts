@@ -37,12 +37,12 @@ import {
   MatStepperModule,
 } from '@angular/material';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {DialogOverviewExampleDialog} from "./dialog-link/link.component";
+import {DialogLinkEdit} from "./dialog-link/link.component";
 
 @NgModule({
   declarations: [
     EditorComponent,
-    DialogOverviewExampleDialog
+    DialogLinkEdit
   ],
   imports: [
     BrowserModule,
@@ -114,6 +114,6 @@ import {DialogOverviewExampleDialog} from "./dialog-link/link.component";
     MatTooltipModule,
   ],
   providers: [],
-  bootstrap: [EditorComponent,DialogOverviewExampleDialog]
+  bootstrap: [EditorComponent,DialogLinkEdit]
 })
 export class AppModule { }
