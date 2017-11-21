@@ -38,11 +38,13 @@ import {
 } from '@angular/material';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {DialogLinkEdit} from "./dialog-link/link.component";
+import {ColorPallateComponent} from "./color-pallate/color.pallate.component";
 
 @NgModule({
   declarations: [
     EditorComponent,
-    DialogLinkEdit
+    DialogLinkEdit,
+    ColorPallateComponent,
   ],
   imports: [
     BrowserModule,
@@ -114,6 +116,6 @@ import {DialogLinkEdit} from "./dialog-link/link.component";
     MatTooltipModule,
   ],
   providers: [],
-  bootstrap: [EditorComponent,DialogLinkEdit]
+  bootstrap: [EditorComponent,DialogLinkEdit,ColorPallateComponent]
 })
 export class AppModule { }

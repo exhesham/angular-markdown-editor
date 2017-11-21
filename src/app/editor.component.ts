@@ -6,6 +6,7 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import {DialogLinkEdit} from "./dialog-link/link.component";
+import {ColorPallateComponent} from "./color-pallate/color.pallate.component";
 import {MatDialog} from "@angular/material";
 
 
@@ -14,7 +15,7 @@ enum ElementType {
   span,
   bold,
   italic,
-  quote,
+  div,
   underline,
 }
 
@@ -40,7 +41,7 @@ export class EditorComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.renderer.parentNode(this.richtextbox)
-    let p = this.inject_new_element(ElementType.p, 'I am a text', this.abcd.nativeElement);
+    let p = this.inject_new_element(ElementType.div, 'I am a text', this.abcd.nativeElement);
     p.focus()
 
 
@@ -86,6 +87,38 @@ export class EditorComponent implements AfterViewInit {
   apply_underline(event) {
     //https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
     document.execCommand('underline');
+  }
+  apply_quote(event) {
+    //
+    document.execCommand('formatBlock', true, 'blockquote');
+  }
+  apply_undo(event) {
+    document.execCommand('undo');
+  }
+  apply_redo(event) {
+    //
+    document.execCommand('redo');
+  }
+  apply_code_format(event) {
+    document.execCommand('formatBlock', true, 'code');
+  }
+  apply_strike_through(event) {
+    document.execCommand('strikeThrough');
+  }
+  clear_format(event) {
+    document.execCommand('removeFormat');
+  }
+  format_align_justify(event) {
+    document.execCommand('justifyFull');
+  }
+  format_align_center(event) {
+    document.execCommand('justifyCenter');
+  }
+  format_align_left(event) {
+    document.execCommand('justifyLeft');
+  }
+  format_align_right(event) {
+    document.execCommand('justifyRight');
   }
   animal: string;
   name: string;
@@ -140,6 +173,9 @@ export class EditorComponent implements AfterViewInit {
         break;
       case ElementType.span:
         name = 'span';
+        break;
+      case ElementType.div:
+        name = 'div';
         break;
     }
     let new_element = this.renderer.createElement(name)

@@ -1,0 +1,6 @@
+.flex-10{
+  flex: 1 1 10%;
+  max-width: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
+}
