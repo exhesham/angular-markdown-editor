@@ -142,7 +142,7 @@ export class EditorComponent implements AfterViewInit {
   }
   create_table() {
     // source: https://www-archive.mozilla.org/editor/midasdemo/
-    let e = this.edit.nativeElement;
+    let e = document.getSelection().focusNode;
     let rowstext = prompt("enter rows");
     let colstext = prompt("enter cols");
     let rows = parseInt(rowstext);
