@@ -5,6 +5,8 @@ import {
   AfterViewInit, Component, ElementRef, Renderer2, ViewChild,
   ViewContainerRef
 } from '@angular/core';
+import {DialogOverviewExampleDialog} from "./dialog-link/link.component";
+import {MatDialog} from "@angular/material";
 
 
 enum ElementType {
@@ -32,7 +34,7 @@ export class EditorComponent implements AfterViewInit {
   private abcd: ElementRef;
   private last_focused_element: any;
 
-  constructor(private renderer: Renderer2) {
+  constructor(private renderer: Renderer2,public dialog: MatDialog) {
 
   }
 
@@ -85,7 +87,21 @@ export class EditorComponent implements AfterViewInit {
     //https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
     document.execCommand('underline');
   }
+  animal: string;
+  name: string;
+  insert_link(){
+    console.log('insert link')
 
+    let dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+      width: '250px',
+      data: { name: this.name, animal: this.animal }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.animal = result;
+    });
+  }
   get_caret_position() {
     var win = window;
     var caretOffset = 0;
