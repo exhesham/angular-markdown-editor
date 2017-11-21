@@ -80,6 +80,7 @@ body {
 
 .card {
   background: #fff;
+  text-align: left;
   border-radius: 2px;
   display: inline-block;
   height: 1842px;

@@ -3,6 +3,7 @@
  */
 import {Component, Inject} from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'dialog-link-edit',

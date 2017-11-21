@@ -6,7 +6,7 @@
   <button mat-icon-button><mat-icon (click)="apply_bold($event)">format_bold</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_italic($event)">format_italic</mat-icon></button>
   <color-pallate></color-pallate>
-  <button mat-icon-button><mat-icon (click)="insert_link($event)">insert_link</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="insert_link()">insert_link</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_quote($event)">format_quote</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_code_format($event)">functions</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_strike_through($event)">format_strikethrough</mat-icon></button>
@@ -19,8 +19,9 @@
   <button mat-icon-button><mat-icon (click)="format_align_left($event)">format_align_left</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="format_align_right($event)">format_align_right</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="clear_format($event)">format_clear</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="create_table()">grid_on</mat-icon></button>
   <div>
-    <button mat-button (click)="openSnackBar('save', 'cancel')">Save</button>
+    <button mat-button>Save</button>
     <mat-form-field>
       <input matInput value="README.md" #file_name>
     </mat-form-field>
@@ -31,7 +32,7 @@
 <body>
 <ng-container #richtextbox>
 </ng-container>
-<div class="card card-3" #abcd></div>
+<div class="card card-3" #edit></div>
 </body>
 
 

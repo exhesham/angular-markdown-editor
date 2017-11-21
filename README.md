@@ -1,5 +1,6 @@
-![alt text](current_state.png "Current State")
+![alt text](imgs/current_state.png "Current State")
 
+This app is deployed to firebase: markdown-editor-exh.firebaseapp.com
 
 # ElectronMarkdownEditor
 

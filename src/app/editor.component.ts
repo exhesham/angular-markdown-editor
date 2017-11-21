@@ -2,15 +2,20 @@
  * Created by hishamy on 16/11/2017.
  */
 import {
-  AfterViewInit, Component, ElementRef, Renderer2, ViewChild,
+  AfterViewInit, Component, ElementRef, Renderer2, ViewChild,Inject,
   ViewContainerRef
 } from '@angular/core';
 import {DialogLinkEdit} from "./dialog-link/link.component";
 import {ColorPallateComponent} from "./color-pallate/color.pallate.component";
-import {MatDialog} from "@angular/material";
-
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { FormsModule } from '@angular/forms';
 
 enum ElementType {
+  tr,
+  td,
+  br,
+  tbody,
+  table,
   p,
   span,
   bold,
@@ -31,9 +36,8 @@ export class EditorComponent implements AfterViewInit {
 
   @ViewChild('richtextbox', {read: ViewContainerRef}) richtextbox: ViewContainerRef;
   @ViewChild('p_dom') p_dom;
-  @ViewChild('abcd')
-  private abcd: ElementRef;
-  private last_focused_element: any;
+  @ViewChild('edit')
+  private edit: ElementRef;
 
   constructor(private renderer: Renderer2,public dialog: MatDialog) {
 
@@ -41,7 +45,7 @@ export class EditorComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.renderer.parentNode(this.richtextbox)
-    let p = this.inject_new_element(ElementType.div, 'I am a text', this.abcd.nativeElement);
+    let p = this.inject_new_element(ElementType.div, 'I am a text', this.edit.nativeElement);
     p.focus()
 
 
@@ -120,21 +124,15 @@ export class EditorComponent implements AfterViewInit {
   format_align_right(event) {
     document.execCommand('justifyRight');
   }
-  animal: string;
-  name: string;
+
   insert_link(){
     console.log('insert link')
-
-    let dialogRef = this.dialog.open(DialogLinkEdit, {
-      width: '250px',
-      data: { name: this.name, animal: this.animal }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.animal = result;
-    });
+    var szURL = prompt("Enter a URL:", "http://");
+    if ((szURL != null) && (szURL != "")) {
+      document.execCommand("CreateLink",false,szURL);
+    }
   }
+
   get_caret_position() {
     var win = window;
     var caretOffset = 0;
@@ -142,12 +140,109 @@ export class EditorComponent implements AfterViewInit {
 
     return [Math.min(sel.focusOffset, sel.anchorOffset), Math.max(sel.focusOffset, sel.anchorOffset)]
   }
+  create_table() {
+    // source: https://www-archive.mozilla.org/editor/midasdemo/
+    let e = this.edit.nativeElement;
+    let rowstext = prompt("enter rows");
+    let colstext = prompt("enter cols");
+    let rows = parseInt(rowstext);
+    let cols = parseInt(colstext);
+    if ((rows > 0) && (cols > 0)) {
+      let table = this.inject_new_element(ElementType.table,null,e)
+      table.setAttribute("border", "1");
+      table.setAttribute("cellpadding", "2");
+      table.setAttribute("cellspacing", "2");
+      let tbody = this.inject_new_element(ElementType.tbody,null,table)
+      for (var i = 0; i < rows; i++) {
+        let tr = this.inject_new_element(ElementType.tr,null,tbody);
+        for (var j = 0; j < cols; j++) {
+          let td = this.inject_new_element(ElementType.td,null,tr);
+          let br = this.inject_new_element(ElementType.br,null,td);
+        }
+      }
+      this.insertNodeAtSelection(e, table);
+    }
+  }
+  insertNodeAtSelection(win, insertNode)
+  {
+    // get current selection
+    var sel = win.getSelection();
+
+    // get the first range of the selection
+    // (there's almost always only one range)
+    var range = sel.getRangeAt(0);
+
+    // deselect everything
+    sel.removeAllRanges();
+
+    // remove content of current selection from document
+    range.deleteContents();
+
+    // get location of current selection
+    var container = range.startContainer;
+    var pos = range.startOffset;
+
+    // make a new range for the new selection
+    range=document.createRange();
+
+    if (container.nodeType==3 && insertNode.nodeType==3) {
+
+      // if we insert text in a textnode, do optimized insertion
+      container.insertData(pos, insertNode.nodeValue);
+
+      // put cursor after inserted text
+      range.setEnd(container, pos+insertNode.length);
+      range.setStart(container, pos+insertNode.length);
+
+    } else {
+
+
+      var afterNode;
+      if (container.nodeType==3) {
+
+        // when inserting into a textnode
+        // we create 2 new textnodes
+        // and put the insertNode in between
+
+        var textNode = container;
+        container = textNode.parentNode;
+        var text = textNode.nodeValue;
+
+        // text before the split
+        var textBefore = text.substr(0,pos);
+        // text after the split
+        var textAfter = text.substr(pos);
+
+        var beforeNode = document.createTextNode(textBefore);
+        afterNode = document.createTextNode(textAfter);
+
+        // insert the 3 new nodes before the old one
+        container.insertBefore(afterNode, textNode);
+        container.insertBefore(insertNode, afterNode);
+        container.insertBefore(beforeNode, insertNode);
+
+        // remove the old node
+        container.removeChild(textNode);
+
+      } else {
+
+        // else simply insert the node
+        afterNode = container.childNodes[pos];
+        container.insertBefore(insertNode, afterNode);
+      }
+
+      range.setEnd(afterNode, 0);
+      range.setStart(afterNode, 0);
+    }
+    sel.addRange(range);
+  }
 
 
   private view_keypress(view1) {
     console.log('i am a view:', view1.elementRef);
     let p = this.renderer.createElement('p')
   }
+
 
   private keypress_decorator(p: any) {
     return (event) => {
@@ -163,25 +258,13 @@ export class EditorComponent implements AfterViewInit {
   }
 
   private inject_new_element(element_type: ElementType, text: string, parent: any) {
-    let name = 'p';
-    switch (element_type) {
-      case ElementType.bold:
-        name = 'b';
-        break;
-      case ElementType.italic:
-        name = 'i';
-        break;
-      case ElementType.span:
-        name = 'span';
-        break;
-      case ElementType.div:
-        name = 'div';
-        break;
-    }
+    let name = ElementType[element_type];
+    console.log('will inject ', name, ' under ', parent)
     let new_element = this.renderer.createElement(name)
-
-    const text_element = this.renderer.createText(text);
-    this.renderer.appendChild(new_element, text_element);
+    if (text != null) {
+      const text_element = this.renderer.createText(text);
+      this.renderer.appendChild(new_element, text_element);
+    }
     this.renderer.appendChild(parent, new_element);
     this.renderer.setAttribute(new_element, 'contenteditable', 'true')
     this.renderer.listen(new_element, 'keypress', this.keypress_decorator(new_element));

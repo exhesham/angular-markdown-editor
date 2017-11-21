@@ -31,6 +31,7 @@ import {
   MatSnackBarModule,
   MatSortModule,
   MatTableModule,
+
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
@@ -39,6 +40,7 @@ import {
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {DialogLinkEdit} from "./dialog-link/link.component";
 import {ColorPallateComponent} from "./color-pallate/color.pallate.component";
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -70,6 +72,7 @@ import {ColorPallateComponent} from "./color-pallate/color.pallate.component";
     MatProgressSpinnerModule,
     MatRadioModule,
     MatRippleModule,
+    FormsModule,
     MatSelectModule,
     MatSidenavModule,
     MatSliderModule,
@@ -80,6 +83,7 @@ import {ColorPallateComponent} from "./color-pallate/color.pallate.component";
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
+
   ],
   exports: [
     BrowserModule,
@@ -94,6 +98,7 @@ import {ColorPallateComponent} from "./color-pallate/color.pallate.component";
     MatDialogModule,
     MatExpansionModule,
     MatGridListModule,
+    FormsModule,
     MatIconModule,
     MatInputModule,
     MatListModule,
