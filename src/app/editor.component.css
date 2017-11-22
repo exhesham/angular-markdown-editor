@@ -36,6 +36,21 @@ blockquote{
   box-shadow: 2px 2px 15px #ccc;
 }
 
+.header-button-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+.header-button-row-right {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-left: 4px;
+  margin-right: 17px;
+}
+
 blockquote::before{
   content: "\201C"; /*Unicode for Left Double Quote*/
 

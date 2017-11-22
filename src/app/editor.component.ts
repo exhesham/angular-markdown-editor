@@ -2,12 +2,12 @@
  * Created by hishamy on 16/11/2017.
  */
 import {
-  AfterViewInit, Component, ElementRef, Renderer2, ViewChild,Inject,
-  ViewContainerRef
+  AfterViewInit, Component, ElementRef, Renderer2, ViewChild, Inject,
+  ViewContainerRef, Output, EventEmitter
 } from '@angular/core';
 import {DialogLinkEdit} from "./dialog-link/link.component";
 import {ColorPallateComponent} from "./color-pallate/color.pallate.component";
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSelectChange} from '@angular/material';
 import { FormsModule } from '@angular/forms';
 
 enum ElementType {
@@ -38,15 +38,18 @@ export class EditorComponent implements AfterViewInit {
   @ViewChild('p_dom') p_dom;
   @ViewChild('edit')
   private edit: ElementRef;
+  private main_div: any;
 
-  scales = [
+  formatblock = [
+    'Normal',
     'Paragraph',
-    'Heading1',
-    'Heading2',
-    'Heading3',
-    'Heading4',
-    'Heading5',
-
+    'Heading 1',
+    'Heading 2',
+    'Heading 3',
+    'Heading 4',
+    'Heading 5',
+    'Heading 6',
+    'Formatted',
   ]
   constructor(private renderer: Renderer2,public dialog: MatDialog) {
 
@@ -55,8 +58,8 @@ export class EditorComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.renderer.parentNode(this.richtextbox)
 
-    let p = this.inject_new_element(ElementType.div, 'I am a text', this.edit.nativeElement);
-    this.edit.nativeElement.focus();
+    this.main_div = this.inject_new_element(ElementType.div, 'I am a text', this.edit.nativeElement);
+    this.main_div.focus();
 
 
   }
@@ -90,64 +93,61 @@ export class EditorComponent implements AfterViewInit {
       text, ranges];
   }
 
-  apply_bold() {
-    //https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
-    document.execCommand('bold', false, null);
-    this.edit.nativeElement.focus();
-  }
+
   apply_italic(event) {
     //https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
     document.execCommand('italic');
-    this.edit.nativeElement.focus();
+    this.main_div.focus();
   }
   apply_underline(event) {
     //https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
     document.execCommand('underline');
-    this.edit.nativeElement.focus();
+    this.main_div.focus();
   }
   apply_quote(event) {
-    //
-    document.execCommand('formatBlock', true, 'blockquote');
-    this.edit.nativeElement.focus();
+    document.execCommand('formatBlock', true, '<blockquote>');
+    this.main_div.focus();
   }
   apply_undo(event) {
     document.execCommand('undo');
-    this.edit.nativeElement.focus();
+    this.main_div.focus();
   }
   apply_redo(event) {
     //
     document.execCommand('redo');
-    this.edit.nativeElement.focus();
+    this.main_div.focus();
   }
   apply_code_format(event) {
-    document.execCommand('formatBlock', true, 'code');
-    this.edit.nativeElement.focus();
+    document.execCommand('formatBlock', true, '<code>');
+    this.main_div.focus();
   }
   apply_strike_through(event) {
     document.execCommand('strikeThrough');
-    this.edit.nativeElement.focus();
+    this.main_div.focus();
   }
   clear_format(event) {
     document.execCommand('removeFormat');
-    this.edit.nativeElement.focus();
+    this.main_div.focus();
   }
   format_align_justify(event) {
     document.execCommand('justifyFull');
-    this.edit.nativeElement.focus();
+    this.main_div.focus();
   }
   format_align_center(event) {
     document.execCommand('justifyCenter');
-    this.edit.nativeElement.focus();
+    this.main_div.focus();
   }
   format_align_left(event) {
     document.execCommand('justifyLeft');
-    this.edit.nativeElement.focus();
+    this.main_div.focus();
   }
   format_align_right(event) {
     document.execCommand('justifyRight');
-    this.edit.nativeElement.focus();
+    this.main_div.focus();
   }
-
+  create_heading(heading_format){
+    document.execCommand("formatBlock",false, heading_format);
+  }
   insert_link(){
     console.log('insert link')
 
@@ -155,13 +155,14 @@ export class EditorComponent implements AfterViewInit {
     if ((szURL != null) && (szURL != "")) {
       document.execCommand("CreateLink",false,szURL);
     }
-    this.edit.nativeElement.focus();
+    this.main_div.focus();
   }
   change_color(color:string){
     console.log('received color:', color);
-    this.edit.nativeElement.focus();
+
     document.execCommand('forecolor', false, color);
-    this.edit.nativeElement.focus();
+    this.main_div.focus();
+    console.log(this.get_focused_element())
 
   }
   get_caret_position() {
@@ -173,11 +174,25 @@ export class EditorComponent implements AfterViewInit {
   }
   insert_ordered_list(){
     document.execCommand('insertorderedlist',false,null);
+    this.main_div.focus();
   }
   insert_unordered_list(){
     document.execCommand('insertunorderedlist',false,null);
+    this.main_div.focus();
   }
+  apply_bold() {
+    //https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
+    document.execCommand('bold', false, null);
+    this.main_div.focus();
+
+  }
+
+  change_format(new_format){
+    document.execCommand('formatblock', false, new_format);
+  }
+
   create_table() {
+
     // source: https://www-archive.mozilla.org/editor/midasdemo/
     // https://developer.mozilla.org/en-US/docs/Rich-Text_Editing_in_Mozilla#Executing_Commands
     let e = document.getSelection().focusNode;
@@ -259,9 +274,7 @@ export class EditorComponent implements AfterViewInit {
 
         // remove the old node
         container.removeChild(textNode);
-
       } else {
-
         // else simply insert the node
         afterNode = container.childNodes[pos];
         container.insertBefore(insertNode, afterNode);
@@ -289,7 +302,7 @@ export class EditorComponent implements AfterViewInit {
 
   private click_decorator(p: any) {
     return (event) => {
-      p.focus()
+      p.focus();
     }
   }
 
@@ -303,8 +316,9 @@ export class EditorComponent implements AfterViewInit {
     }
     this.renderer.appendChild(parent, new_element);
     this.renderer.setAttribute(new_element, 'contenteditable', 'true')
+    this.renderer.setAttribute(new_element, 'autofocus', 'true')
     this.renderer.listen(new_element, 'keypress', this.keypress_decorator(new_element));
-    this.renderer.listen(new_element, 'click', this.click_decorator(new_element));
+    // this.renderer.listen(new_element, 'click', this.click_decorator(new_element));
     // this.renderer.listen(new_element, 'focus', this.focus_decorator(new_element));
     new_element.focus()
     return new_element;

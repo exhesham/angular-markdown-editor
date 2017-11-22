@@ -1,14 +1,15 @@
 <!--icons from:https://docs.flutter.io/flutter/material/Icons-class.html-->
+<body>
 <mat-toolbar>
-  <div class="spacer-icon">Markdown Editor     </div>
+  <div class="spacer-icon">Markdown Editor    </div>
   <button mat-icon-button><mat-icon (click)="insert_unordered_list()" >format_list_bulleted</mat-icon></button>
-  <button mat-icon-button><mat-icon  (click)="insert_ordered_list()">format_list_numbered</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="insert_ordered_list()">format_list_numbered</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_bold()">format_bold</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_italic($event)">format_italic</mat-icon></button>
   <color-pallate (onColorPicked)="change_color($event)"></color-pallate>
   <button mat-icon-button><mat-icon (click)="insert_link()">insert_link</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_quote($event)">format_quote</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_code_format($event)">functions</mat-icon></button>
+  <!--<button mat-icon-button><mat-icon (click)="apply_quote($event)">format_quote</mat-icon></button>-->
+  <button mat-icon-button><mat-icon (click)="apply_code_format($event)">code</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_strike_through($event)">format_strikethrough</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_underline($event)">insert_emoticon</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_underline($event)">insert_photo</mat-icon></button>
@@ -20,26 +21,32 @@
   <button mat-icon-button><mat-icon (click)="format_align_right($event)">format_align_right</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="clear_format($event)">format_clear</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="create_table()">grid_on</mat-icon></button>
-  <mat-form-field>
-    <mat-select placeholder="Font Size">
-      <mat-option *ngFor="let scale of font_scales" [value]="scale">
-        {{ scale }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+
+  <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h1')" (click)="create_heading()">H1</button>
+  <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h2')">H2</button>
+  <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h3')">H3</button>
+  <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h4')">H4</button>
+  <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h5')">H5</button>
+  <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h6')">H6</button>
+  <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('p')">p</button>
+  <button mat-mini-fab color='white' class="header-button-row-right" (click)="create_heading('pre')">pre</button>
+
   <div>
-    <button mat-button>Save</button>
+
     <mat-form-field>
       <input matInput value="README.md" #file_name>
     </mat-form-field>
+    <button mat-icon-button><mat-icon >save</mat-icon></button>
   </div>
 
 
 </mat-toolbar>
-<body>
+
 <ng-container #richtextbox>
 </ng-container>
-<div class="card card-3" #edit></div>
+<div class="card card-3" #edit >
+
+</div>
 </body>
 
 
