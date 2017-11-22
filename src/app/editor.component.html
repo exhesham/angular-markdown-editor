@@ -1,11 +1,11 @@
 <!--icons from:https://docs.flutter.io/flutter/material/Icons-class.html-->
 <mat-toolbar>
   <div class="spacer-icon">Markdown Editor     </div>
-  <button mat-icon-button><mat-icon >format_list_bulleted</mat-icon></button>
-  <button mat-icon-button><mat-icon >format_list_numbered</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_bold($event)">format_bold</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="insert_unordered_list()" >format_list_bulleted</mat-icon></button>
+  <button mat-icon-button><mat-icon  (click)="insert_ordered_list()">format_list_numbered</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_bold()">format_bold</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_italic($event)">format_italic</mat-icon></button>
-  <color-pallate></color-pallate>
+  <color-pallate (onColorPicked)="change_color($event)"></color-pallate>
   <button mat-icon-button><mat-icon (click)="insert_link()">insert_link</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_quote($event)">format_quote</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_code_format($event)">functions</mat-icon></button>
@@ -20,6 +20,13 @@
   <button mat-icon-button><mat-icon (click)="format_align_right($event)">format_align_right</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="clear_format($event)">format_clear</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="create_table()">grid_on</mat-icon></button>
+  <mat-form-field>
+    <mat-select placeholder="Font Size">
+      <mat-option *ngFor="let scale of font_scales" [value]="scale">
+        {{ scale }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
   <div>
     <button mat-button>Save</button>
     <mat-form-field>

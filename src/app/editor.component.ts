@@ -39,14 +39,24 @@ export class EditorComponent implements AfterViewInit {
   @ViewChild('edit')
   private edit: ElementRef;
 
+  scales = [
+    'Paragraph',
+    'Heading1',
+    'Heading2',
+    'Heading3',
+    'Heading4',
+    'Heading5',
+
+  ]
   constructor(private renderer: Renderer2,public dialog: MatDialog) {
 
   }
 
   ngAfterViewInit(): void {
     this.renderer.parentNode(this.richtextbox)
+
     let p = this.inject_new_element(ElementType.div, 'I am a text', this.edit.nativeElement);
-    p.focus()
+    this.edit.nativeElement.focus();
 
 
   }
@@ -80,65 +90,92 @@ export class EditorComponent implements AfterViewInit {
       text, ranges];
   }
 
-  apply_bold(event) {
+  apply_bold() {
     //https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
-    document.execCommand('bold');
+    document.execCommand('bold', false, null);
+    this.edit.nativeElement.focus();
   }
   apply_italic(event) {
     //https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
     document.execCommand('italic');
+    this.edit.nativeElement.focus();
   }
   apply_underline(event) {
     //https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
     document.execCommand('underline');
+    this.edit.nativeElement.focus();
   }
   apply_quote(event) {
     //
     document.execCommand('formatBlock', true, 'blockquote');
+    this.edit.nativeElement.focus();
   }
   apply_undo(event) {
     document.execCommand('undo');
+    this.edit.nativeElement.focus();
   }
   apply_redo(event) {
     //
     document.execCommand('redo');
+    this.edit.nativeElement.focus();
   }
   apply_code_format(event) {
     document.execCommand('formatBlock', true, 'code');
+    this.edit.nativeElement.focus();
   }
   apply_strike_through(event) {
     document.execCommand('strikeThrough');
+    this.edit.nativeElement.focus();
   }
   clear_format(event) {
     document.execCommand('removeFormat');
+    this.edit.nativeElement.focus();
   }
   format_align_justify(event) {
     document.execCommand('justifyFull');
+    this.edit.nativeElement.focus();
   }
   format_align_center(event) {
     document.execCommand('justifyCenter');
+    this.edit.nativeElement.focus();
   }
   format_align_left(event) {
     document.execCommand('justifyLeft');
+    this.edit.nativeElement.focus();
   }
   format_align_right(event) {
     document.execCommand('justifyRight');
+    this.edit.nativeElement.focus();
   }
 
   insert_link(){
     console.log('insert link')
+
     var szURL = prompt("Enter a URL:", "http://");
     if ((szURL != null) && (szURL != "")) {
       document.execCommand("CreateLink",false,szURL);
     }
+    this.edit.nativeElement.focus();
   }
+  change_color(color:string){
+    console.log('received color:', color);
+    this.edit.nativeElement.focus();
+    document.execCommand('forecolor', false, color);
+    this.edit.nativeElement.focus();
 
+  }
   get_caret_position() {
     var win = window;
     var caretOffset = 0;
     var sel = win.getSelection();
 
     return [Math.min(sel.focusOffset, sel.anchorOffset), Math.max(sel.focusOffset, sel.anchorOffset)]
+  }
+  insert_ordered_list(){
+    document.execCommand('insertorderedlist',false,null);
+  }
+  insert_unordered_list(){
+    document.execCommand('insertunorderedlist',false,null);
   }
   create_table() {
     // source: https://www-archive.mozilla.org/editor/midasdemo/
@@ -196,8 +233,6 @@ export class EditorComponent implements AfterViewInit {
       range.setStart(container, pos+insertNode.length);
 
     } else {
-
-
       var afterNode;
       if (container.nodeType==3) {
 
