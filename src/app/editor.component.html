@@ -2,27 +2,27 @@
 <body>
 <mat-toolbar>
   <div class="spacer-icon">Markdown Editor    </div>
-  <button mat-icon-button><mat-icon (click)="insert_unordered_list()" >format_list_bulleted</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="insert_ordered_list()">format_list_numbered</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_bold()">format_bold</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_italic($event)">format_italic</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command($event, 'insertunorderedlist', null)" >format_list_bulleted</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command($event, 'insertorderedlist', null)">format_list_numbered</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command($event, 'bold', null)">format_bold</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command($event, 'italic', null)">format_italic</mat-icon></button>
   <color-pallate (onColorPicked)="change_color($event)"></color-pallate>
   <button mat-icon-button><mat-icon (click)="insert_link()">insert_link</mat-icon></button>
-  <!--<button mat-icon-button><mat-icon (click)="apply_quote($event)">format_quote</mat-icon></button>-->
-  <button mat-icon-button><mat-icon (click)="apply_code_format($event)">code</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_strike_through($event)">format_strikethrough</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_underline($event)">insert_emoticon</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_underline($event)">insert_photo</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_undo($event)">undo</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_redo($event)">redo</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="format_align_justify($event)">format_align_justify</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="format_align_center($event)">format_align_center</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="format_align_left($event)">format_align_left</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="format_align_right($event)">format_align_right</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="clear_format($event)">format_clear</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command($event, 'formatBlock', '<blockquote>')">format_quote</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command($event, 'formatBlock', '<pre>')">code</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command($event, 'strikeThrough', null)">format_strikethrough</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command($event, 'underline', null)">insert_emoticon</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command($event, 'inserImage', 'website')">insert_photo</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command($event, 'undo', null)">undo</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command($event, 'redo', null)">redo</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command($event, 'justifyFull', null)">format_align_justify</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command($event, 'justifyCenter', null)">format_align_center</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command($event, 'justifyLeft', null)">format_align_left</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command($event, 'justifyRight', null)">format_align_right</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command($event, 'removeFormat', null)">format_clear</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="create_table()">grid_on</mat-icon></button>
 
-  <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h1')" (click)="create_heading()">H1</button>
+  <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h1')">H1</button>
   <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h2')">H2</button>
   <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h3')">H3</button>
   <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h4')">H4</button>
@@ -44,7 +44,7 @@
 
 <ng-container #richtextbox>
 </ng-container>
-<div class="card card-3" #edit >
+<div class="card card-3" #edit (keypress)="handle_special_keypress($event)">
 
 </div>
 </body>

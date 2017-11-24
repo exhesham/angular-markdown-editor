@@ -10,7 +10,7 @@ import {ColorPallateComponent} from "./color-pallate/color.pallate.component";
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSelectChange} from '@angular/material';
 import { FormsModule } from '@angular/forms';
 
-enum ElementType {
+export enum ElementType {
   tr,
   td,
   br,
@@ -18,9 +18,10 @@ enum ElementType {
   table,
   p,
   span,
-  bold,
+  b,
   italic,
   div,
+  blockquote,
   underline,
 }
 
@@ -40,17 +41,6 @@ export class EditorComponent implements AfterViewInit {
   private edit: ElementRef;
   private main_div: any;
 
-  formatblock = [
-    'Normal',
-    'Paragraph',
-    'Heading 1',
-    'Heading 2',
-    'Heading 3',
-    'Heading 4',
-    'Heading 5',
-    'Heading 6',
-    'Formatted',
-  ]
   constructor(private renderer: Renderer2,public dialog: MatDialog) {
 
   }
@@ -58,7 +48,7 @@ export class EditorComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.renderer.parentNode(this.richtextbox)
 
-    this.main_div = this.inject_new_element(ElementType.div, 'I am a text', this.edit.nativeElement);
+    this.main_div = this.inject_new_element(ElementType.p, 'I am a text', this.edit.nativeElement);
     this.main_div.focus();
 
 
@@ -88,63 +78,25 @@ export class EditorComponent implements AfterViewInit {
       max = document.getSelection().anchorOffset
 
     }
-    return [Math.min(min,max),
-      Math.max(min,max),
-      text, ranges];
+    return text;
   }
 
+  handle_special_keypress(event){
+    if(event.key==='Enter'){
 
-  apply_italic(event) {
+
+    }
+  }
+
+  apply_command(event: any,command_id: string, value: any) {
     //https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
-    document.execCommand('italic');
+    if(event.target.tag == command_id){
+      // TODO: Disable the tag if it is will not be disabled automatically
+    }
+     document.execCommand(command_id, true, value);
     this.main_div.focus();
   }
-  apply_underline(event) {
-    //https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
-    document.execCommand('underline');
-    this.main_div.focus();
-  }
-  apply_quote(event) {
-    document.execCommand('formatBlock', true, '<blockquote>');
-    this.main_div.focus();
-  }
-  apply_undo(event) {
-    document.execCommand('undo');
-    this.main_div.focus();
-  }
-  apply_redo(event) {
-    //
-    document.execCommand('redo');
-    this.main_div.focus();
-  }
-  apply_code_format(event) {
-    document.execCommand('formatBlock', true, '<code>');
-    this.main_div.focus();
-  }
-  apply_strike_through(event) {
-    document.execCommand('strikeThrough');
-    this.main_div.focus();
-  }
-  clear_format(event) {
-    document.execCommand('removeFormat');
-    this.main_div.focus();
-  }
-  format_align_justify(event) {
-    document.execCommand('justifyFull');
-    this.main_div.focus();
-  }
-  format_align_center(event) {
-    document.execCommand('justifyCenter');
-    this.main_div.focus();
-  }
-  format_align_left(event) {
-    document.execCommand('justifyLeft');
-    this.main_div.focus();
-  }
-  format_align_right(event) {
-    document.execCommand('justifyRight');
-    this.main_div.focus();
-  }
+
   create_heading(heading_format){
     document.execCommand("formatBlock",false, heading_format);
   }
@@ -162,8 +114,6 @@ export class EditorComponent implements AfterViewInit {
 
     document.execCommand('forecolor', false, color);
     this.main_div.focus();
-    console.log(this.get_focused_element())
-
   }
   get_caret_position() {
     var win = window;
@@ -172,25 +122,6 @@ export class EditorComponent implements AfterViewInit {
 
     return [Math.min(sel.focusOffset, sel.anchorOffset), Math.max(sel.focusOffset, sel.anchorOffset)]
   }
-  insert_ordered_list(){
-    document.execCommand('insertorderedlist',false,null);
-    this.main_div.focus();
-  }
-  insert_unordered_list(){
-    document.execCommand('insertunorderedlist',false,null);
-    this.main_div.focus();
-  }
-  apply_bold() {
-    //https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
-    document.execCommand('bold', false, null);
-    this.main_div.focus();
-
-  }
-
-  change_format(new_format){
-    document.execCommand('formatblock', false, new_format);
-  }
-
   create_table() {
 
     // source: https://www-archive.mozilla.org/editor/midasdemo/
@@ -286,26 +217,6 @@ export class EditorComponent implements AfterViewInit {
     sel.addRange(range);
   }
 
-
-  private view_keypress(view1) {
-    console.log('i am a view:', view1.elementRef);
-    let p = this.renderer.createElement('p')
-  }
-
-
-  private keypress_decorator(p: any) {
-    return (event) => {
-      if (event.key === 'Enter') {
-      }
-    }
-  }
-
-  private click_decorator(p: any) {
-    return (event) => {
-      p.focus();
-    }
-  }
-
   private inject_new_element(element_type: ElementType, text: string, parent: any) {
     let name = ElementType[element_type];
     console.log('will inject ', name, ' under ', parent)
@@ -317,9 +228,8 @@ export class EditorComponent implements AfterViewInit {
     this.renderer.appendChild(parent, new_element);
     this.renderer.setAttribute(new_element, 'contenteditable', 'true')
     this.renderer.setAttribute(new_element, 'autofocus', 'true')
-    this.renderer.listen(new_element, 'keypress', this.keypress_decorator(new_element));
-    // this.renderer.listen(new_element, 'click', this.click_decorator(new_element));
-    // this.renderer.listen(new_element, 'focus', this.focus_decorator(new_element));
+      // this.renderer.listen(new_element, 'click', this.click_decorator(new_element));
+      // this.renderer.listen(new_element, 'focus', this.focus_decorator(new_element));
     new_element.focus()
     return new_element;
   }
