@@ -8,8 +8,8 @@
   <button mat-icon-button><mat-icon (click)="apply_command( 'italic', null)">format_italic</mat-icon></button>
   <color-pallate (onColorPicked)="change_color($event)"></color-pallate>
   <button mat-icon-button><mat-icon (click)="insert_link()">insert_link</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_command( 'formatBlock', '<blockquote>')">format_quote</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_command( 'formatBlock', '<pre>')">code</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command( 'formatBlock', 'blockquote')">format_quote</mat-icon></button>
+  <button mat-icon-button><mat-icon (click)="apply_command( 'formatBlock', 'pre')">code</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_command( 'strikeThrough', null)">format_strikethrough</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_command( 'underline', null)">insert_emoticon</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_command( 'inserImage', 'website')">insert_photo</mat-icon></button>

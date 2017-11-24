@@ -40,6 +40,7 @@ export class EditorComponent implements AfterViewInit {
     @ViewChild('edit')
     private edit: ElementRef;
     private main_div: any;
+    private tags_need_custom_removal = ['blockquote','code', 'pre'];
 
     constructor(private renderer: Renderer2, public dialog: MatDialog) {
 
@@ -75,9 +76,13 @@ export class EditorComponent implements AfterViewInit {
     }
 
     handle_special_keypress(event) {
+
         if (event.key === 'Enter') {
-
-
+            if(this.which_tag('blockquote') ){
+                console.log('will unquote')
+                document.execCommand('InsertParagraph');
+                document.execCommand('Outdent');
+            }
         }
     }
 
@@ -113,13 +118,6 @@ export class EditorComponent implements AfterViewInit {
         this.main_div.focus();
     }
 
-    get_caret_position() {
-        var win = window;
-        var caretOffset = 0;
-        var sel = win.getSelection();
-
-        return [Math.min(sel.focusOffset, sel.anchorOffset), Math.max(sel.focusOffset, sel.anchorOffset)]
-    }
 
     create_table() {
 
@@ -235,24 +233,65 @@ export class EditorComponent implements AfterViewInit {
         new_element.focus()
         return new_element;
     }
+    which_tag(tagName){
 
-    private executed_custom_tag_removale(command_id: string, value: any) {
-        console.log('should executed_custom_tag_removale')
-        let focused = this.edit.nativeElement.ownerDocument.getSelection().focusNode;
+        var sel, containerNode;
+        var tagFound = false;
 
-        let parent = focused.parentNode;
+        tagName = tagName.toUpperCase();
 
-        while(parent !=this.main_div && parent !=this.edit.nativeElement){
-            console.log('parent = ', parent)
-            if( parent.tagName.toLowerCase() == 'blockquote'){
-                console.log('parent = is a quote')
-                break;
+        if (window.getSelection) {
+
+            sel = window.getSelection();
+
+            if (sel.rangeCount > 0) {
+                containerNode = sel.getRangeAt(0).commonAncestorContainer;
             }
-            parent = parent.parentNode
+
+        }else if( (sel = document.getSelection) && sel.type != "Control" ) {
+
+            containerNode = sel.createRange().parentElement();
+
         }
 
-        if (command_id == 'formatBlock' && value == '<blockquote>' && parent.tagName != null && parent.tagName.toLowerCase() == 'blockquote') {
-            console.log('should disable')
+        while (containerNode) {
+
+            if (containerNode.nodeType == 1 && containerNode.tagName == tagName) {
+
+                tagFound = true;
+                containerNode = null;
+
+            }else{
+
+                containerNode = containerNode.parentNode;
+
+            }
+
+        }
+
+        return tagFound;
+    }
+    private executed_custom_tag_removale(command_id: string, value: any) {
+        console.log('should executed_custom_tag_removale')
+        if (command_id == 'formatBlock' && value == 'blockquote' && this.which_tag('blockquote')) {
+            console.log('should disable blockquote')
+            document.execCommand('Outdent');
+            return true
+        }
+        if (command_id == 'formatBlock' && value == 'pre' && this.which_tag('pre')) {
+            console.log('should disable pre')
+            let focused = this.edit.nativeElement.ownerDocument.getSelection().focusNode;
+
+            let parent = focused.parentNode;
+
+            while(parent !=this.main_div && parent !=this.edit.nativeElement){
+                console.log('parent = ', parent)
+                if( parent.tagName.toLowerCase() == 'pre'){
+                    console.log('parent = is a pre')
+                    break;
+                }
+                parent = parent.parentNode
+            }
 
             console.log('will delete first child at', parent.parentNode.childNodes)
 
@@ -263,9 +302,9 @@ export class EditorComponent implements AfterViewInit {
             this.renderer.removeChild(focused, parent.parentNode.childNodes[0]);
             //this.inject_new_element(ElementType.span,focused.textContent, parent.parentNode)
 
-            // then we have a blockquote that should be disabled
 
-
+            return true
         }
+        return false
     }
 }
