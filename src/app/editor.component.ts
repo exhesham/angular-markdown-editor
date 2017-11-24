@@ -280,29 +280,7 @@ export class EditorComponent implements AfterViewInit {
         }
         if (command_id == 'formatBlock' && value == 'pre' && this.which_tag('pre')) {
             console.log('should disable pre')
-            let focused = this.edit.nativeElement.ownerDocument.getSelection().focusNode;
-
-            let parent = focused.parentNode;
-
-            while(parent !=this.main_div && parent !=this.edit.nativeElement){
-                console.log('parent = ', parent)
-                if( parent.tagName.toLowerCase() == 'pre'){
-                    console.log('parent = is a pre')
-                    break;
-                }
-                parent = parent.parentNode
-            }
-
-            console.log('will delete first child at', parent.parentNode.childNodes)
-
-            for(let i=0;i<parent.parentNode.childNodes[0].childNodes.length;i++){
-                this.renderer.appendChild(parent.parentNode, parent.parentNode.childNodes[0].childNodes[i].cloneNode(true));
-            }
-
-            this.renderer.removeChild(focused, parent.parentNode.childNodes[0]);
-            //this.inject_new_element(ElementType.span,focused.textContent, parent.parentNode)
-
-
+            this.create_heading('p');
             return true
         }
         return false
