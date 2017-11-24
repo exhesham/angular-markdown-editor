@@ -144,7 +144,12 @@ export class EditorComponent implements AfterViewInit {
             this.insertNodeAtSelection(e, table);
         }
     }
-
+    insert_image(){
+        let imagePath = prompt('Enter Image URL:', 'http://');
+        if ((imagePath != null) && (imagePath != "")) {
+            document.execCommand('InsertImage', false, imagePath);
+        }
+    }
     insertNodeAtSelection(win, insertNode) {
         // get current selection
         var sel = win.getSelection();
