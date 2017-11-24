@@ -254,12 +254,14 @@ export class EditorComponent implements AfterViewInit {
         if (command_id == 'formatBlock' && value == '<blockquote>' && parent.tagName != null && parent.tagName.toLowerCase() == 'blockquote') {
             console.log('should disable')
 
-            var el = focused
-
-
             console.log('will delete first child at', parent.parentNode.childNodes)
+
+            for(let i=0;i<parent.parentNode.childNodes[0].childNodes.length;i++){
+                this.renderer.appendChild(parent.parentNode, parent.parentNode.childNodes[0].childNodes[i].cloneNode(true));
+            }
+
             this.renderer.removeChild(focused, parent.parentNode.childNodes[0]);
-            this.inject_new_element(ElementType.span,focused.textContent, parent.parentNode)
+            //this.inject_new_element(ElementType.span,focused.textContent, parent.parentNode)
 
             // then we have a blockquote that should be disabled
 
