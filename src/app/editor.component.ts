@@ -380,8 +380,12 @@ export class EditorComponent implements AfterViewInit {
             return '---'
         }
         if( tag_name == 'br'){
-            console.log('------->br')
+
             return '\n'
+        }
+        if( tag_name == 'div'){
+
+            return '\n' + text_content
         }
         if( tag_name == 'p'){
             return text_content
