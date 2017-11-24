@@ -1,10 +1,22 @@
-<div mat-dialog-content>
+<mat-card class="about-card">
+    <mat-card-header>
+        <div mat-card-avatar class="exhesham-header-image"></div>
+        <mat-card-title>Hesham Yassin</mat-card-title>
+        <mat-card-subtitle>exhesham</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image src="../../assets/profile.jpg" alt="Photo of Hesham Yassin @2016">
+    <mat-card-content>
+        <p>
 
-  <mat-form-field>
-    <input matInput tabindex="1" [(ngModel)]="data.link" placeholder="create your link....">
-  </mat-form-field>
-</div>
-<div mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="data" tabindex="2">Ok</button>
-  <button mat-button (click)="onNoClick()" tabindex="-1">Cancel</button>
-</div>
+            This is a project to easily create a markdown file. The project is open source and can be found on github.
+            Follow Me at:<br>
+            <img class="blog-logo" ><b>Blog: </b><a href="https://exhesham.com">exhesham.com</a><br>
+            <img class="lkdin-logo"><b>Linkdin: </b><a href="https://www.linkedin.com/in/hesham-yassin-a5a869b0/">hesham yassin</a><br>
+            <img class="github-logo"><b>Github: </b><a href="https://github.com/exhesham">github.com/exhesham</a><br>
+        </p>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-button>LIKE</button>
+        <button mat-button>SHARE</button>
+    </mat-card-actions>
+</mat-card>

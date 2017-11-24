@@ -8,15 +8,8 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'dialog-about',
   templateUrl: './dialog.about.component.html',
+    styleUrls: ['dialog.about.component.css'],
 })
 export class DialogAbout {
-
-  constructor(
-    public dialogRef: MatDialogRef<DialogAbout>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
+  constructor(public dialogRef: MatDialogRef<DialogAbout>) { }
 }

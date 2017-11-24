@@ -10,6 +10,7 @@ import {ColorPallateComponent} from "./color-pallate/color.pallate.component";
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSelectChange} from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import {isNullOrUndefined} from "util";
+import {DialogAbout} from "./dialog-about/dialog.about.component";
 
 export enum ElementType {
     tr,
@@ -41,7 +42,7 @@ export class EditorComponent implements AfterViewInit {
 
     @ViewChild('edit')
     private edit: ElementRef;
-    private file_name = 'README.md'
+    file_name = 'README.md'
     private main_div: any;
     private tags_need_custom_removal = ['blockquote','code', 'pre'];
 
@@ -292,24 +293,35 @@ export class EditorComponent implements AfterViewInit {
     private parse_html_to_markdown(node){
         let res = ''
         let nodes = node.childNodes;
+        let parent_node_tag = node.parentElement.tagName.toLowerCase()
+        console.log('parse_html_to_markdown - the node ', parent_node_tag, ' has #' + nodes.length)
+        if ( nodes.length == 0){
+            console.log('parse_html_to_markdown - singleton: the node', node, ' has #' + nodes.length)
+            return this.get_markdown_syntax(node.textContent, parent_node_tag ,node.parentElement.attributes, node);
+        }
+
         for(let i = 0;i < nodes.length;i++){
-            if(!nodes[i].hasChildNodes()){
-                console.log(nodes[i].parentElement)
-                res = res + this.get_markdown_syntax(nodes[i].textContent, nodes[i].parentElement.tagName.toLowerCase(),nodes[i].parentElement.attributes)
-            }else{
+            console.log('parse_html_to_markdown - child: handling the node', nodes[i])
+            let child_tag_name = nodes[i].parentElement.tagName.toLowerCase()
+            if(nodes[i].hasChildNodes() && child_tag_name != 'ul'){
                 res = res + this.parse_html_to_markdown(nodes[i]);
+
+            }else{
+                res = res + this.get_markdown_syntax(nodes[i].textContent, child_tag_name,nodes[i].parentElement.attributes, nodes[i])
             }
         }
         return res
 
     }
 
-    private get_markdown_syntax(text_content: string, tag_name: string, attr: NamedNodeMap) {
-        console.log(tag_name, text_content, attr);
+    private get_markdown_syntax(text_content: string, tag_name: string, attr: NamedNodeMap, node) {
+
+        let nodes;
+        let res;
         switch(tag_name){
             case 'b':
             case 'strong':
-                return '*' + text_content + '*'
+                return '**' + text_content + '**'
             case 'i':
                 return '_' + text_content + '_'
             case 'u':
@@ -350,17 +362,35 @@ export class EditorComponent implements AfterViewInit {
                 return '\n'
             case 'p':
                 return text_content
+
             case 'del':
             case 'strike':
                 return '~~' + text_content + '~~'
-            case '':
-                return '' + text_content + ''
+            case 'lo':
+                nodes = node.childNodes;
+                res = ''
+                for(let i = 0;i < nodes.length;i++){
+                    let node_parsed = this.parse_html_to_markdown(nodes[i]);
+                    res += (i+1).toString() + '. ' + node_parsed + '\n'
+                }
+                return res
+            case 'ul':
+                console.log('get_markdown_syntax:', tag_name, text_content, attr);
+                nodes = node.childNodes;
+                res = ''
+                for(let i = 0;i < nodes.length;i++){
+
+                    let node_parsed = this.parse_html_to_markdown(nodes[i]);
+                    console.log('ul - node_parsed=', node_parsed)
+                    res += '..* ' + node_parsed + '\n'
+                }
+                return res
             default:
+                console.log('default:', tag_name, text_content, attr);
                 return text_content
-
-
         }
     }
+
     save_and_download(){
         let file_content = this.parse_html_to_markdown(this.main_div);
         var data, filename, link;
@@ -378,5 +408,13 @@ export class EditorComponent implements AfterViewInit {
         link.setAttribute('href', data);
         link.setAttribute('download', filename);
         link.click();
+    }
+
+    about(){
+        let dialogRef = this.dialog.open(DialogAbout, {
+
+        });
+        dialogRef.afterClosed().subscribe(result => {
+        });
     }
 }

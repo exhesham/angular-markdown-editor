@@ -1,16 +1,21 @@
 <!--icons from:https://docs.flutter.io/flutter/material/Icons-class.html-->
 <body>
 <mat-toolbar>
-  <div class="spacer-icon">Markdown Editor    </div>
+<mat-toolbar-row>
+  <div (click)="about()"><img class="logo" src="../assets/logo.png">  Markdown Editor</div>
+
   <button mat-icon-button><mat-icon (click)="apply_command( 'insertunorderedlist', null)" >format_list_bulleted</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_command( 'insertorderedlist', null)">format_list_numbered</mat-icon></button>
+
   <button mat-icon-button><mat-icon (click)="apply_command( 'bold', null)">format_bold</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_command( 'italic', null)">format_italic</mat-icon></button>
-  <color-pallate (onColorPicked)="change_color($event)"></color-pallate>
+    <button mat-icon-button><mat-icon (click)="apply_command( 'italic', null)">format_italic</mat-icon></button>
+    <button mat-icon-button><mat-icon (click)="apply_command( 'underline', null)">format_underline</mat-icon></button>
+    <button mat-icon-button><mat-icon (click)="apply_command( 'strikeThrough', null)">format_strikethrough</mat-icon></button>
+    <color-pallate (onColorPicked)="change_color($event)"></color-pallate>
   <button mat-icon-button><mat-icon (click)="insert_link()">insert_link</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_command( 'formatBlock', 'blockquote')">format_quote</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_command( 'formatBlock', 'pre')">code</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_command( 'strikeThrough', null)">format_strikethrough</mat-icon></button>
+
   <!--<button mat-icon-button><mat-icon (click)="apply_command( 'underline', null)">insert_emoticon</mat-icon></button>-->
   <button mat-icon-button><mat-icon (click)="insert_image()">insert_photo</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_command( 'undo', null)">undo</mat-icon></button>
@@ -39,7 +44,7 @@
     <button mat-icon-button (click)="save_and_download()"><mat-icon >save</mat-icon></button>
   </div>
 
-
+</mat-toolbar-row>
 </mat-toolbar>
 
 <ng-container #richtextbox>
