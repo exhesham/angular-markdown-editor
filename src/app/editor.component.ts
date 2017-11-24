@@ -294,101 +294,112 @@ export class EditorComponent implements AfterViewInit {
         let res = ''
         let nodes = node.childNodes;
         let parent_node_tag = node.parentElement.tagName.toLowerCase()
-        console.log('parse_html_to_markdown - the node ', parent_node_tag, ' has #' + nodes.length)
+        console.log('node=',node,'  parent_node_tag=',parent_node_tag, ' nodes.length=', nodes.length)
         if ( nodes.length == 0){
-            console.log('parse_html_to_markdown - singleton: the node', node, ' has #' + nodes.length)
             return this.get_markdown_syntax(node.textContent, parent_node_tag ,node.parentElement.attributes, node);
-        }
+        }else{
+            for(let i = 0;i < nodes.length;i++){
 
-        for(let i = 0;i < nodes.length;i++){
-            console.log('parse_html_to_markdown - child: handling the node', nodes[i])
-            let child_tag_name = nodes[i].parentElement.tagName.toLowerCase()
-            if(nodes[i].hasChildNodes() && child_tag_name != 'ul'){
-                res = res + this.parse_html_to_markdown(nodes[i]);
+                let child_tag_name = nodes[i].parentElement.tagName.toLowerCase()
+                console.log('child_tag_name =',child_tag_name )
+                if(nodes[i].hasChildNodes() && child_tag_name != 'ul' && child_tag_name != 'ol'){
+                    res = res + this.parse_html_to_markdown(nodes[i]);
 
-            }else{
-                res = res + this.get_markdown_syntax(nodes[i].textContent, child_tag_name,nodes[i].parentElement.attributes, nodes[i])
+                }else{
+                    let attr
+                    if(child_tag_name == 'ul' || child_tag_name == 'ol'){
+                        attr = i+1
+                    }else{
+                        attr = nodes[i].parentElement.attributes
+                    }
+                    res = res + this.get_markdown_syntax(nodes[i].textContent, child_tag_name,attr, nodes[i])
+                }
             }
+            return res
         }
-        return res
+
+
 
     }
 
-    private get_markdown_syntax(text_content: string, tag_name: string, attr: NamedNodeMap, node) {
+    private get_markdown_syntax(text_content: string, tag_name: string, attr: NamedNodeMap|any, node) {
 
         let nodes;
         let res;
-        switch(tag_name){
-            case 'b':
-            case 'strong':
-                return '**' + text_content + '**'
-            case 'i':
-                return '_' + text_content + '_'
-            case 'u':
-                return '' + text_content + ''
-            case 'h1':
-                return '# ' + text_content
-            case 'h2':
-                return '## ' + text_content
-            case 'h3':
-                return '### ' + text_content
-            case 'h4':
-                return '#### ' + text_content
-            case 'h5':
-                return '##### ' + text_content
-            case 'h6':
-                return '###### ' + text_content
-            case 'a':
-                let link = ''
-                if(!isNullOrUndefined(attr.getNamedItem('href'))){
-                    link = attr.getNamedItem('href').value;
-                }
-                return '[' + text_content + '](' + link + ')'
-            case 'img':
-                let src = ''
-                if(!isNullOrUndefined(attr.getNamedItem('src'))){
-                    src = attr.getNamedItem('src').value;
-                }
-                return '![' + text_content + '](' + src + ')'
-            case 'pre':
-                return '`' + text_content + '`'
-            case 'code':
-                return '\n```' + text_content + '```\n'
-            case 'blockquote':
-                return '> ' + text_content + '\n'
-            case 'hr':
-                return '---'
-            case 'br':
-                return '\n'
-            case 'p':
-                return text_content
+        let ul_prefix = false;
 
-            case 'del':
-            case 'strike':
-                return '~~' + text_content + '~~'
-            case 'lo':
-                nodes = node.childNodes;
-                res = ''
-                for(let i = 0;i < nodes.length;i++){
-                    let node_parsed = this.parse_html_to_markdown(nodes[i]);
-                    res += (i+1).toString() + '. ' + node_parsed + '\n'
-                }
-                return res
-            case 'ul':
-                console.log('get_markdown_syntax:', tag_name, text_content, attr);
-                nodes = node.childNodes;
-                res = ''
-                for(let i = 0;i < nodes.length;i++){
-
-                    let node_parsed = this.parse_html_to_markdown(nodes[i]);
-                    console.log('ul - node_parsed=', node_parsed)
-                    res += '..* ' + node_parsed + '\n'
-                }
-                return res
-            default:
-                console.log('default:', tag_name, text_content, attr);
-                return text_content
+        if( tag_name == 'b'){
+            return '**' + text_content + '**'
         }
+        if( tag_name == 'i'){
+            return '_' + text_content + '_'
+        }
+        if( tag_name == 'u'){
+            return '' + text_content + ''
+        }
+        if( tag_name == 'h1'){
+            return '# ' + text_content
+        }
+        if( tag_name == 'h2'){
+            return '## ' + text_content
+        }
+        if( tag_name == 'h3'){
+            return '### ' + text_content
+        }
+        if( tag_name == 'h4'){
+            return '#### ' + text_content
+        }
+        if( tag_name == 'h5'){
+            return '##### ' + text_content
+        }
+        if( tag_name == 'h6'){
+            return '###### ' + text_content
+
+        }
+        if( tag_name == 'a'){
+            let link = ''
+            if(!isNullOrUndefined(attr.getNamedItem('href'))){
+                link = attr.getNamedItem('href').value;
+            }
+            return '[' + text_content + '](' + link + ')'
+        }
+        if( tag_name == 'pre'){
+            let src = ''
+            if(!isNullOrUndefined(attr.getNamedItem('src'))){
+                src = attr.getNamedItem('src').value;
+            }
+            return '![' + text_content + '](' + src + ')'
+        }
+        if( tag_name == 'code'){
+            return '\n```' + text_content + '```\n'
+        }
+        if( tag_name == 'blockquote'){
+            return '> ' + text_content + '\n'
+        }
+        if( tag_name == 'hr'){
+            return '---'
+        }
+        if( tag_name == 'br'){
+            console.log('------->br')
+            return '\n'
+        }
+        if( tag_name == 'p'){
+            return text_content
+        }
+        if( tag_name == 'del' || tag_name == 'strike'){
+            return '~~' + text_content + '~~'
+        }
+        if( tag_name == 'ul' || tag_name == 'ol'){
+            res = ''
+            let prefix = tag_name == 'ul'? ' ..*' : attr + '- '
+            console.log('ul,ol node=', node)
+            let node_parsed = this.parse_html_to_markdown(node);
+            res += node_parsed.length >0? prefix + node_parsed + '\n' :''
+
+            return res
+        }
+
+        return text_content
     }
 
     save_and_download(){
