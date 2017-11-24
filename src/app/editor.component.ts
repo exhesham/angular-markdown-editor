@@ -5,10 +5,11 @@ import {
     AfterViewInit, Component, ElementRef, Renderer2, ViewChild, Inject,
     ViewContainerRef, Output, EventEmitter
 } from '@angular/core';
-import {DialogLinkEdit} from "./dialog-link/link.component";
+//import {DialogLinkEdit} from "./dialog-link/link.component";
 import {ColorPallateComponent} from "./color-pallate/color.pallate.component";
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSelectChange} from '@angular/material';
 import {FormsModule} from '@angular/forms';
+import {isNullOrUndefined} from "util";
 
 export enum ElementType {
     tr,
@@ -37,13 +38,14 @@ export class EditorComponent implements AfterViewInit {
 
     @ViewChild('richtextbox', {read: ViewContainerRef}) richtextbox: ViewContainerRef;
     @ViewChild('p_dom') p_dom;
+
     @ViewChild('edit')
     private edit: ElementRef;
+    private file_name = 'README.md'
     private main_div: any;
     private tags_need_custom_removal = ['blockquote','code', 'pre'];
 
     constructor(private renderer: Renderer2, public dialog: MatDialog) {
-
     }
 
     ngAfterViewInit(): void {
@@ -76,7 +78,6 @@ export class EditorComponent implements AfterViewInit {
     }
 
     handle_special_keypress(event) {
-
         if (event.key === 'Enter') {
             if(this.which_tag('blockquote') ){
                 console.log('will unquote')
@@ -88,12 +89,9 @@ export class EditorComponent implements AfterViewInit {
 
     apply_command(command_id: string, value: any) {
         //https://developer.mozilla.org/en-US/docs/Web/API/Document/execCommand
-        if (this.executed_custom_tag_removale(command_id, value)) {
-            // TODO: Disable the tag if it is will not be disabled automatically
-        } else {
+        if (!this.executed_custom_tag_removale(command_id, value)) {
             document.execCommand(command_id, true, value);
         }
-
         this.main_div.focus();
     }
 
@@ -289,5 +287,96 @@ export class EditorComponent implements AfterViewInit {
             return true
         }
         return false
+    }
+
+    private parse_html_to_markdown(node){
+        let res = ''
+        let nodes = node.childNodes;
+        for(let i = 0;i < nodes.length;i++){
+            if(!nodes[i].hasChildNodes()){
+                console.log(nodes[i].parentElement)
+                res = res + this.get_markdown_syntax(nodes[i].textContent, nodes[i].parentElement.tagName.toLowerCase(),nodes[i].parentElement.attributes)
+            }else{
+                res = res + this.parse_html_to_markdown(nodes[i]);
+            }
+        }
+        return res
+
+    }
+
+    private get_markdown_syntax(text_content: string, tag_name: string, attr: NamedNodeMap) {
+        console.log(tag_name, text_content, attr);
+        switch(tag_name){
+            case 'b':
+            case 'strong':
+                return '*' + text_content + '*'
+            case 'i':
+                return '_' + text_content + '_'
+            case 'u':
+                return '' + text_content + ''
+            case 'h1':
+                return '# ' + text_content
+            case 'h2':
+                return '## ' + text_content
+            case 'h3':
+                return '### ' + text_content
+            case 'h4':
+                return '#### ' + text_content
+            case 'h5':
+                return '##### ' + text_content
+            case 'h6':
+                return '###### ' + text_content
+            case 'a':
+                let link = ''
+                if(!isNullOrUndefined(attr.getNamedItem('href'))){
+                    link = attr.getNamedItem('href').value;
+                }
+                return '[' + text_content + '](' + link + ')'
+            case 'img':
+                let src = ''
+                if(!isNullOrUndefined(attr.getNamedItem('src'))){
+                    src = attr.getNamedItem('src').value;
+                }
+                return '![' + text_content + '](' + src + ')'
+            case 'pre':
+                return '`' + text_content + '`'
+            case 'code':
+                return '\n```' + text_content + '```\n'
+            case 'blockquote':
+                return '> ' + text_content + '\n'
+            case 'hr':
+                return '---'
+            case 'br':
+                return '\n'
+            case 'p':
+                return text_content
+            case 'del':
+            case 'strike':
+                return '~~' + text_content + '~~'
+            case '':
+                return '' + text_content + ''
+            default:
+                return text_content
+
+
+        }
+    }
+    save_and_download(){
+        let file_content = this.parse_html_to_markdown(this.main_div);
+        var data, filename, link;
+
+        if (file_content == null) return;
+
+        filename = this.file_name || 'README.md';
+
+        if (!file_content.match(/^data:text\/md/i)) {
+            file_content = 'data:text/csv;charset=utf-8,' + file_content;
+        }
+        data = encodeURI(file_content);
+
+        link = document.createElement('a');
+        link.setAttribute('href', data);
+        link.setAttribute('download', filename);
+        link.click();
     }
 }

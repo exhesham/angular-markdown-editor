@@ -38,14 +38,14 @@ import {
   MatStepperModule,
 } from '@angular/material';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {DialogLinkEdit} from "./dialog-link/link.component";
+import {DialogAbout} from "./dialog-about/dialog.about.component";
 import {ColorPallateComponent} from "./color-pallate/color.pallate.component";
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     EditorComponent,
-    DialogLinkEdit,
+    DialogAbout,
     ColorPallateComponent,
   ],
   imports: [
@@ -121,6 +121,6 @@ import { FormsModule } from '@angular/forms';
     MatTooltipModule,
   ],
   providers: [],
-  bootstrap: [EditorComponent,DialogLinkEdit,ColorPallateComponent]
+  bootstrap: [EditorComponent,DialogAbout,ColorPallateComponent]
 })
 export class AppModule { }

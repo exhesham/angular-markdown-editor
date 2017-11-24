@@ -6,13 +6,13 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'dialog-link-edit',
-  templateUrl: './link.component.html',
+  selector: 'dialog-about',
+  templateUrl: './dialog.about.component.html',
 })
-export class DialogLinkEdit {
+export class DialogAbout {
 
   constructor(
-    public dialogRef: MatDialogRef<DialogLinkEdit>,
+    public dialogRef: MatDialogRef<DialogAbout>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   onNoClick(): void {

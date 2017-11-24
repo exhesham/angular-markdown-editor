@@ -11,7 +11,7 @@
   <button mat-icon-button><mat-icon (click)="apply_command( 'formatBlock', 'blockquote')">format_quote</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_command( 'formatBlock', 'pre')">code</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_command( 'strikeThrough', null)">format_strikethrough</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_command( 'underline', null)">insert_emoticon</mat-icon></button>
+  <!--<button mat-icon-button><mat-icon (click)="apply_command( 'underline', null)">insert_emoticon</mat-icon></button>-->
   <button mat-icon-button><mat-icon (click)="insert_image()">insert_photo</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_command( 'undo', null)">undo</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_command( 'redo', null)">redo</mat-icon></button>
@@ -34,9 +34,9 @@
   <div>
 
     <mat-form-field>
-      <input matInput value="README.md" #file_name>
+      <input matInput value="README.md" maxlength="40"  [(ngModel)]="file_name" >
     </mat-form-field>
-    <button mat-icon-button><mat-icon >save</mat-icon></button>
+    <button mat-icon-button (click)="save_and_download()"><mat-icon >save</mat-icon></button>
   </div>
 
 
