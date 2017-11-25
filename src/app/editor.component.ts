@@ -80,6 +80,8 @@ export class EditorComponent implements AfterViewInit {
 
     handle_special_keypress(event) {
         if (event.key === 'Enter') {
+            console.log(this.edit.nativeElement.getBoundingClientRect())
+
             if(this.which_tag('blockquote') ){
                 console.log('will unquote')
                 document.execCommand('InsertParagraph');
@@ -331,6 +333,9 @@ export class EditorComponent implements AfterViewInit {
         if( tag_name == 'b'){
             return '**' + text_content + '**'
         }
+        if( tag_name == 'pre'){
+            return '\n`' + text_content + '`'
+        }
         if( tag_name == 'i'){
             return '_' + text_content + '_'
         }
@@ -338,22 +343,22 @@ export class EditorComponent implements AfterViewInit {
             return '' + text_content + ''
         }
         if( tag_name == 'h1'){
-            return '# ' + text_content
+            return '# ' + text_content + '\n'
         }
         if( tag_name == 'h2'){
-            return '## ' + text_content
+            return '## ' + text_content + '\n'
         }
         if( tag_name == 'h3'){
-            return '### ' + text_content
+            return '### ' + text_content + '\n'
         }
         if( tag_name == 'h4'){
-            return '#### ' + text_content
+            return '#### ' + text_content + '\n'
         }
         if( tag_name == 'h5'){
-            return '##### ' + text_content
+            return '##### ' + text_content + '\n'
         }
         if( tag_name == 'h6'){
-            return '###### ' + text_content
+            return '###### ' + text_content + '\n'
 
         }
         if( tag_name == 'a'){
@@ -363,12 +368,12 @@ export class EditorComponent implements AfterViewInit {
             }
             return '[' + text_content + '](' + link + ')'
         }
-        if( tag_name == 'pre'){
+        if( tag_name == 'img'){
             let src = ''
             if(!isNullOrUndefined(attr.getNamedItem('src'))){
                 src = attr.getNamedItem('src').value;
             }
-            return '![' + text_content + '](' + src + ')'
+            return '![' + text_content + '](' + src + ')' + '\n'
         }
         if( tag_name == 'code'){
             return '\n```' + text_content + '```\n'
@@ -377,7 +382,7 @@ export class EditorComponent implements AfterViewInit {
             return '> ' + text_content + '\n'
         }
         if( tag_name == 'hr'){
-            return '---'
+            return '---' + '\n'
         }
         if( tag_name == 'br'){
 
@@ -388,7 +393,7 @@ export class EditorComponent implements AfterViewInit {
             return '\n' + text_content
         }
         if( tag_name == 'p'){
-            return text_content
+            return '\n' + text_content
         }
         if( tag_name == 'del' || tag_name == 'strike'){
             return '~~' + text_content + '~~'
