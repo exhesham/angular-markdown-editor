@@ -303,7 +303,13 @@ export class EditorComponent implements AfterViewInit {
         let parent_node_tag = isNullOrUndefined(node.tagName)?node.parentElement.tagName.toLowerCase():node.tagName.toLowerCase()
 
         if ( nodes.length == 0){
-            return this.get_markdown_syntax(node.textContent, parent_node_tag ,node.attributes, node);
+            let attr =  node.attributes
+            attr =  !isNullOrUndefined(attr) ?attr:node.parentElement.attributes;
+            if (parent_node_tag == 'img'){
+                return this.get_markdown_syntax(node.textContent, parent_node_tag ,attr, node);
+            }else{
+                return node.textContent;
+            }
         }else{
             for(let i = 0;i < nodes.length;i++){
 
@@ -312,15 +318,19 @@ export class EditorComponent implements AfterViewInit {
                 // console.log('child_tag_name =',child_tag_name )
                 if(nodes[i].hasChildNodes() && child_tag_name == 'ol' ){
                     for(let j = 0;j < nodes[i].childNodes.length;j++){
-                        res = res + j + '- ' + this.parse_html_to_markdown(nodes[i].childNodes[j], attr+1);
+                        res = res + attr + '- ' + this.parse_html_to_markdown(nodes[i].childNodes[j], attr+1);
                     }
                 }else{
                     if(nodes[i].hasChildNodes() && child_tag_name == 'ul' ){
+                        let prefix = child_tag_name == 'ul'?' * ': attr + '- '
                         for(let j = 0;j < nodes[i].childNodes.length;j++){
-                            res = res + ' * ' + this.parse_html_to_markdown(nodes[i].childNodes[j]);
+                            if(!isNullOrUndefined(nodes[i].childNodes[j].tagName) && nodes[i].childNodes[j].tagName.toLowerCase() == 'li'){
+                                res = res + prefix + this.parse_html_to_markdown(nodes[i].childNodes[j])+ '\n';
+                            }
                         }
                     }else{
-                        let attr = nodes[i].attributes
+                        let attr =  nodes[i].attributes
+                        attr =  !isNullOrUndefined(attr) ?attr:nodes[i].parentElement.attributes;
                         if(nodes[i].hasChildNodes()){
                             let inside_content = this.parse_html_to_markdown(nodes[i]);
                             res = res + this.get_markdown_syntax(inside_content, child_tag_name,attr, nodes[i])
@@ -334,9 +344,6 @@ export class EditorComponent implements AfterViewInit {
             }
             return res
         }
-
-
-
     }
 
     private get_markdown_syntax(text_content: string, tag_name: string, attr: NamedNodeMap|any, node) {
@@ -344,12 +351,12 @@ export class EditorComponent implements AfterViewInit {
         let nodes;
         let res;
         let ul_prefix = false;
-        console.log('tag_name=',tag_name, 'node=',node)
+        console.log('tag_name=',tag_name, 'node=',node, 'attr=',attr)
         if( tag_name == 'b'){
             return '**' + text_content + '**'
         }
         if( tag_name == 'pre'){
-            return '\n`' + text_content + '`'
+            return '\n```' + text_content + '```\n'
         }
         if( tag_name == 'i'){
             return '_' + text_content + '_'
@@ -358,27 +365,28 @@ export class EditorComponent implements AfterViewInit {
             return '' + text_content + ''
         }
         if( tag_name == 'h1'){
-            return '# ' + text_content + '\n'
+            return '# ' + text_content
         }
         if( tag_name == 'h2'){
-            return '## ' + text_content + '\n'
+            return '## ' + text_content
         }
         if( tag_name == 'h3'){
-            return '### ' + text_content + '\n'
+            return '### ' + text_content
         }
         if( tag_name == 'h4'){
-            return '#### ' + text_content + '\n'
+            return '#### ' + text_content
         }
         if( tag_name == 'h5'){
-            return '##### ' + text_content + '\n'
+            return '##### ' + text_content
         }
         if( tag_name == 'h6'){
-            return '###### ' + text_content + '\n'
+            return '###### ' + text_content
 
         }
         if( tag_name == 'a'){
             let link = ''
-            if(!isNullOrUndefined(attr.getNamedItem('href'))){
+            console.log('link attr:', attr)
+            if(!isNullOrUndefined(attr) && !isNullOrUndefined(attr.getNamedItem('href'))){
                 link = attr.getNamedItem('href').value;
             }
             return '[' + text_content + '](' + link + ')'
@@ -388,17 +396,17 @@ export class EditorComponent implements AfterViewInit {
             let src = ''
             let alt = ''
             console.log('image has source:', attr)
-            if(!isNullOrUndefined(attr.getNamedItem('src'))){
+            if(!isNullOrUndefined(attr) && !isNullOrUndefined(attr.getNamedItem('src'))){
                 console.log('image has source')
                 src = attr.getNamedItem('src').value;
             }
-            if(!isNullOrUndefined(attr.getNamedItem('alt'))){
+            if(!isNullOrUndefined(attr) && !isNullOrUndefined(attr.getNamedItem('alt'))){
                 alt = attr.getNamedItem('alt').value;
             }
-            return '![' + alt + '](' + src + ')' + '\n'
+            return '![' + alt + '](' + src + ')'
         }
         if( tag_name == 'code'){
-            return '\n```\n' + text_content + '\n```\n'
+            return 'js\n' + text_content
         }
         if( tag_name == 'blockquote'){
             return '> ' + text_content + '\n'
