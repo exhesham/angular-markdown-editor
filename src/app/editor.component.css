@@ -79,8 +79,8 @@ blockquote a{
   color: #c76c0c;
 }
 .example-icon {
-    padding: 0 14px;
-    color: red;
+
+    color: indianred;
 }
 blockquote a:hover{
   color: #666;

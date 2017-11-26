@@ -1,17 +1,19 @@
 /**
  * Created by hishamy on 16/11/2017.
  */
+import * as showdowntools from 'showdown';
 import {
     AfterViewInit, Component, ElementRef, Renderer2, ViewChild, Inject,
     ViewContainerRef, Output, EventEmitter
 } from '@angular/core';
 //import {DialogLinkEdit} from "./dialog-link/link.component";
 import {ColorPallateComponent} from "./color-pallate/color.pallate.component";
+import { MarkdownToHtmlModule } from 'ng2-markdown-to-html';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSelectChange} from '@angular/material';
 import {FormsModule} from '@angular/forms';
 import {isNullOrUndefined} from "util";
 import {DialogAbout} from "./dialog-about/dialog.about.component";
-
+interface MSBaseReader { result: any; }
 export enum ElementType {
     tr,
     td,
@@ -35,13 +37,16 @@ export enum ElementType {
 })
 
 export class EditorComponent implements AfterViewInit {
-
+    public  markdown: any;
+    public markdown_input_file: any;
+    public reader: any;
 
     @ViewChild('richtextbox', {read: ViewContainerRef}) richtextbox: ViewContainerRef;
     @ViewChild('p_dom') p_dom;
+    @ViewChild('fileInput') fileInput:ElementRef;
 
     @ViewChild('edit')
-    private edit: ElementRef;
+    public edit: ElementRef;
     file_name = 'README.md'
     private main_div: any;
     private tags_need_custom_removal = ['blockquote','code', 'pre'];
@@ -292,30 +297,40 @@ export class EditorComponent implements AfterViewInit {
         return false
     }
 
-    private parse_html_to_markdown(node){
+    private parse_html_to_markdown(node, attr=1){
         let res = ''
         let nodes = node.childNodes;
-        let parent_node_tag = node.parentElement.tagName.toLowerCase()
-        console.log('node=',node,'  parent_node_tag=',parent_node_tag, ' nodes.length=', nodes.length)
+        let parent_node_tag = isNullOrUndefined(node.tagName)?node.parentElement.tagName.toLowerCase():node.tagName.toLowerCase()
+
         if ( nodes.length == 0){
-            return this.get_markdown_syntax(node.textContent, parent_node_tag ,node.parentElement.attributes, node);
+            return this.get_markdown_syntax(node.textContent, parent_node_tag ,node.attributes, node);
         }else{
             for(let i = 0;i < nodes.length;i++){
 
-                let child_tag_name = nodes[i].parentElement.tagName.toLowerCase()
-                console.log('child_tag_name =',child_tag_name )
-                if(nodes[i].hasChildNodes() && child_tag_name != 'ul' && child_tag_name != 'ol'){
-                    res = res + this.parse_html_to_markdown(nodes[i]);
-
-                }else{
-                    let attr
-                    if(child_tag_name == 'ul' || child_tag_name == 'ol'){
-                        attr = i+1
-                    }else{
-                        attr = nodes[i].parentElement.attributes
+                let child_tag_name =isNullOrUndefined(nodes[i].tagName)?nodes[i].parentElement.tagName.toLowerCase():nodes[i].tagName.toLowerCase()
+                    nodes[i].parentElement.tagName.toLowerCase()
+                // console.log('child_tag_name =',child_tag_name )
+                if(nodes[i].hasChildNodes() && child_tag_name == 'ol' ){
+                    for(let j = 0;j < nodes[i].childNodes.length;j++){
+                        res = res + j + '- ' + this.parse_html_to_markdown(nodes[i].childNodes[j], attr+1);
                     }
-                    res = res + this.get_markdown_syntax(nodes[i].textContent, child_tag_name,attr, nodes[i])
+                }else{
+                    if(nodes[i].hasChildNodes() && child_tag_name == 'ul' ){
+                        for(let j = 0;j < nodes[i].childNodes.length;j++){
+                            res = res + ' * ' + this.parse_html_to_markdown(nodes[i].childNodes[j]);
+                        }
+                    }else{
+                        let attr = nodes[i].attributes
+                        if(nodes[i].hasChildNodes()){
+                            let inside_content = this.parse_html_to_markdown(nodes[i]);
+                            res = res + this.get_markdown_syntax(inside_content, child_tag_name,attr, nodes[i])
+                        }else{
+                            res = res + this.parse_html_to_markdown(nodes[i])
+                        }
+                    }
                 }
+
+
             }
             return res
         }
@@ -329,7 +344,7 @@ export class EditorComponent implements AfterViewInit {
         let nodes;
         let res;
         let ul_prefix = false;
-
+        console.log('tag_name=',tag_name, 'node=',node)
         if( tag_name == 'b'){
             return '**' + text_content + '**'
         }
@@ -369,14 +384,21 @@ export class EditorComponent implements AfterViewInit {
             return '[' + text_content + '](' + link + ')'
         }
         if( tag_name == 'img'){
+            console.log('image is received')
             let src = ''
+            let alt = ''
+            console.log('image has source:', attr)
             if(!isNullOrUndefined(attr.getNamedItem('src'))){
+                console.log('image has source')
                 src = attr.getNamedItem('src').value;
             }
-            return '![' + text_content + '](' + src + ')' + '\n'
+            if(!isNullOrUndefined(attr.getNamedItem('alt'))){
+                alt = attr.getNamedItem('alt').value;
+            }
+            return '![' + alt + '](' + src + ')' + '\n'
         }
         if( tag_name == 'code'){
-            return '\n```' + text_content + '```\n'
+            return '\n```\n' + text_content + '\n```\n'
         }
         if( tag_name == 'blockquote'){
             return '> ' + text_content + '\n'
@@ -398,15 +420,15 @@ export class EditorComponent implements AfterViewInit {
         if( tag_name == 'del' || tag_name == 'strike'){
             return '~~' + text_content + '~~'
         }
-        if( tag_name == 'ul' || tag_name == 'ol'){
-            res = ''
-            let prefix = tag_name == 'ul'? ' ..*' : attr + '- '
-            console.log('ul,ol node=', node)
-            let node_parsed = this.parse_html_to_markdown(node);
-            res += node_parsed.length >0? prefix + node_parsed + '\n' :''
-
-            return res
-        }
+        // if( tag_name == 'ul' || tag_name == 'ol'){
+        //     res = ''
+        //     let prefix = tag_name == 'ul'? ' ..*' : attr + '- '
+        //     console.log('ul,ol node=', node)
+        //     let node_parsed = this.parse_html_to_markdown(node);
+        //     res += node_parsed.length >0? prefix + node_parsed + '\n' :''
+        //
+        //     return res
+        // }
 
         return text_content
     }
@@ -437,4 +459,29 @@ export class EditorComponent implements AfterViewInit {
         dialogRef.afterClosed().subscribe(result => {
         });
     }
+    clean(){
+        this.main_div.innerHTML= ''
+        this.main_div.focus();
+    }
+    public open_file(event){
+        var files: File[] = event.srcElement.files;
+
+        this.markdown_input_file = files[0];
+
+        this.reader = new FileReader();
+        let callback = (e:any) => {
+            this.markdown = this.reader.result;
+            var converter = new showdowntools.Converter()
+            let html = converter.makeHtml(this.markdown);
+            console.log('setting html', html)
+            this.main_div.innerHTML= html
+
+        }
+
+        this.reader.onloadend = callback
+
+        this.reader.readAsText(files[0]);
+
+    }
+
 }

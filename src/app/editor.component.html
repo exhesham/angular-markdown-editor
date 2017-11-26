@@ -4,7 +4,12 @@
 <mat-toolbar-row>
   <div (click)="about()"><img class="logo" src="../assets/logo.png">  Markdown Editor</div>
 
-  <button mat-icon-button><mat-icon (click)="apply_command( 'insertunorderedlist', null)" >format_list_bulleted</mat-icon></button>
+    <input type="file" (change)="open_file($event)" file-reader="fileContent" />
+    <button mat-icon-button><mat-icon (click)="clean()" >delete</mat-icon></button>
+
+
+
+    <button mat-icon-button><mat-icon (click)="apply_command( 'insertunorderedlist', null)" >format_list_bulleted</mat-icon></button>
   <button mat-icon-button><mat-icon (click)="apply_command( 'insertorderedlist', null)">format_list_numbered</mat-icon></button>
 
   <button mat-icon-button><mat-icon (click)="apply_command( 'bold', null)">format_bold</mat-icon></button>
@@ -44,7 +49,7 @@
     <button mat-icon-button (click)="save_and_download()"><mat-icon >save</mat-icon></button>
   </div>
     <mat-icon class="example-icon"  (click)="about()">favorite</mat-icon>
-    <a href="https://github.com/exhesham/electron-markdown-editor/issues/new"><mat-icon class="example-icon"  >bug_report</mat-icon></a>
+    <a href="https://github.com/exhesham/electron-markdown-editor/issues/new" mat-icon-button><mat-icon class="example-icon"  >bug_report</mat-icon></a>
 </mat-toolbar-row>
 </mat-toolbar>
 
