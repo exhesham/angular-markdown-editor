@@ -10,6 +10,11 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
+  "author": "exhesham",
+  "description": "This is a markdown editor. you can write html and it will be automatically converted to markdown format. you don't need to be familiar with the markdown format. you have the option to open a markdown file and edit it as you are writing a document",
+  "homepage": "www.mdedit4.firebaseapp.com",
+  "keywords": ["markdown","exhesham","markdown editor", "html to markdown"],
+  "repository": "https://github.com/exhesham/angular-markdown-editor",
   "private": true,
   "dependencies": {
     "@angular/animations": "^5.0.2",
