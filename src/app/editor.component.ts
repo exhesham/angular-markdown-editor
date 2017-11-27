@@ -60,6 +60,14 @@ export class EditorComponent implements AfterViewInit {
         this.renderer.parentNode(this.richtextbox)
         this.main_div = this.inject_new_element(ElementType.p, 'I am a text', this.edit.nativeElement);
         this.main_div.focus();
+        let default_ui = '<h1 id="welcometothemarkdowneditor">Welcome to the markdown Editor!!!!!</h1>\n' +
+            '<p>If you save the file, you will get this page in MARKDOWN format!</p>\n' +
+            '<p><strong>Feel free to open an issue or suggest a feature by pressing the button!</strong></p>\n' +
+            '<p><img src="http://nmrwiki.org/wiki/images/7/7d/Bug.png" alt="" /></p>\n' +
+            '<p>Dont forget to clean this mess by pressing the Trash bin button.\n' +
+            ' <img src="https://www.google.co.il/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwi6r56kv9_XAhUIb1AKHfNqBfMQjRwIBw&url=https%3A%2F%2Fwww.flaticon.com%2Ffree-icon%2Fbug-report-button_61019&psig=AOvVaw1PxFAA79s6quupY4wtwTQm&ust=1511897513705432" alt="" /></p>';
+        this.main_div.innerHTML= default_ui;
+
     }
 
     get_selection_text() {
