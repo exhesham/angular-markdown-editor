@@ -59,7 +59,7 @@ export class EditorComponent implements AfterViewInit {
     ngAfterViewInit(): void {
         this.renderer.parentNode(this.richtextbox)
         this.main_div = this.inject_new_element(ElementType.p, 'I am a text', this.edit.nativeElement);
-        this.main_div.focus();
+
         let default_ui = '<h1 id="welcometothemarkdowneditor">Welcome to the markdown Editor!!!!!</h1>\n' +
             '<p>If you save the file, you will get this page in MARKDOWN format!</p>\n' +
             '<p><strong>Feel free to open an issue or suggest a feature by pressing the button!</strong></p>\n' +
@@ -67,6 +67,7 @@ export class EditorComponent implements AfterViewInit {
             '<p>Dont forget to clean this mess by pressing the Trash bin button.\n' +
             ' <img src="https://www.google.co.il/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwi6r56kv9_XAhUIb1AKHfNqBfMQjRwIBw&url=https%3A%2F%2Fwww.flaticon.com%2Ffree-icon%2Fbug-report-button_61019&psig=AOvVaw1PxFAA79s6quupY4wtwTQm&ust=1511897513705432" alt="" /></p>';
         this.main_div.innerHTML= default_ui;
+        this.main_div.focus();
 
     }
 
@@ -308,81 +309,71 @@ export class EditorComponent implements AfterViewInit {
         return false
     }
 
+    private get_node_tag(node){
+        return isNullOrUndefined(node.tagName)? '': node.tagName.toLowerCase();
+    }
     private parse_html_to_markdown(node, attr=1){
         let res = ''
         let nodes = node.childNodes;
-        let parent_node_tag = isNullOrUndefined(node.tagName)?node.parentElement.tagName.toLowerCase():node.tagName.toLowerCase()
+        // let parent_node_tag = isNullOrUndefined(node.tagName)?node.parentElement.tagName.toLowerCase():node.tagName.toLowerCase()
+        let parent_node_tag = this.get_node_tag(node)
 
         if ( nodes.length == 0){
-            let attr =  node.attributes
-            attr =  !isNullOrUndefined(attr) ?attr:node.parentElement.attributes;
-            if (parent_node_tag == 'img'){
-                return this.get_markdown_syntax(node.textContent, parent_node_tag ,attr, node);
-            }else{
-                return node.textContent;
-            }
+            console.log('NO Children for the node ', node, ' with tag:', node.tagName);
+            let node_attr =  node.attributes
+            return this.get_markdown_syntax(node.textContent, parent_node_tag ,node_attr, node);
         }else{
             for(let i = 0;i < nodes.length;i++){
-
-                let child_tag_name =isNullOrUndefined(nodes[i].tagName)?nodes[i].parentElement.tagName.toLowerCase():nodes[i].tagName.toLowerCase()
-                    nodes[i].parentElement.tagName.toLowerCase()
-                // console.log('child_tag_name =',child_tag_name )
-                if(nodes[i].hasChildNodes()){
-                    if(child_tag_name == 'ol' ){
-                        for(let j = 0;j < nodes[i].childNodes.length;j++){
-                            res = res + attr + '- ' + this.parse_html_to_markdown(nodes[i].childNodes[j], attr+1);
-                        }
-                    }else{
-                        if(child_tag_name == 'ul' ){
-                            let prefix = child_tag_name == 'ul'?' * ': attr + '- '
-                            for(let j = 0;j < nodes[i].childNodes.length;j++){
-                                if(!isNullOrUndefined(nodes[i].childNodes[j].tagName) && nodes[i].childNodes[j].tagName.toLowerCase() == 'li'){
-                                    res = res + prefix + this.parse_html_to_markdown(nodes[i].childNodes[j])+ '\n';
-                                }
-                            }
-                        }else{
-                            if(child_tag_name == 'table'){
-                                console.log('it is a table!!! nodes[i]=', nodes[i].childNodes);
-                                for(let j=0;j< nodes[i].childNodes.length;j++){ // there should be tbody as a child of table
-                                    if(nodes[i].childNodes[j].tagName && nodes[i].childNodes[j].tagName.toLowerCase() == 'tbody'){
-                                        let rows = nodes[i].childNodes[j].childNodes;
-                                        let table_md = ''
-                                        for(let r=0;r< rows.length;r++){ //scan the rows
-                                            let cols = rows[r].childNodes;
-                                            let row_md = '\n|'
-                                            for(let c=0;c< cols.length;c++){//scan the  columns
-                                                console.log(r,c,cols[c]);
-                                                let cell_content = this.parse_html_to_markdown(cols[c], attr)
-                                                row_md = row_md + cell_content + '|'
-                                            }
-                                            table_md+=row_md
-                                            if(r == 0){
-                                                let split_attr = '\n|'
-                                                for(let c=0;c< cols.length;c++){// add the attributes underline
-                                                    split_attr  = split_attr + '---|'
-                                                }
-                                                table_md+=split_attr
-                                            }
-                                        }
-                                        res = res + table_md + '\n'
-                                    }
-                                }
-
-                            }else{
-                                let attr =  nodes[i].attributes
-                                attr =  !isNullOrUndefined(attr) ?attr:nodes[i].parentElement.attributes;
-                                let inside_content = this.parse_html_to_markdown(nodes[i]);
-                                res = res + this.get_markdown_syntax(inside_content, child_tag_name,attr, nodes[i]);
-                            }
-
+                // let child_tag_name =isNullOrUndefined(nodes[i].tagName)?nodes[i].parentElement.tagName.toLowerCase():nodes[i].tagName.toLowerCase()
+                let child_tag_name = this.get_node_tag(nodes[i]);
+                if(child_tag_name == 'ol' ){
+                    console.log('Handling  ol: ', nodes[i])
+                    for(let j = 0;j < nodes[i].childNodes.length;j++){      // go over all the li of the ol
+                        console.log('Handling li # ',attr, ' of ol')
+                        res = res + attr + '- ' + this.parse_html_to_markdown(nodes[i].childNodes[j], attr+1)+ '\n';
+                    }
+                    continue;
+                }
+                if(child_tag_name == 'ul' ){
+                    console.log('Handling  ul: ', nodes[i])
+                    for(let j = 0;j < nodes[i].childNodes.length;j++){
+                        if(!isNullOrUndefined(nodes[i].childNodes[j].tagName) && nodes[i].childNodes[j].tagName.toLowerCase() == 'li'){
+                            res = res + ' * ' + this.parse_html_to_markdown(nodes[i].childNodes[j])+ '\n';
                         }
                     }
-                }else{
-                    res = res + this.parse_html_to_markdown(nodes[i])
+                    continue;
                 }
-
-
-
+                if(child_tag_name == 'table'){
+                    console.log('Handling  table: ', nodes[i])
+                    for(let j=0;j< nodes[i].childNodes.length;j++){ // there should be tbody as a child of table
+                        if(nodes[i].childNodes[j].tagName && nodes[i].childNodes[j].tagName.toLowerCase() == 'tbody'){
+                            let rows = nodes[i].childNodes[j].childNodes;
+                            let table_md = ''
+                            for(let r=0;r< rows.length;r++){ //scan the rows
+                                let cols = rows[r].childNodes;
+                                let row_md = '\n|'
+                                for(let c=0;c< cols.length;c++){//scan the  columns
+                                    let cell_content = this.parse_html_to_markdown(cols[c], attr)
+                                    row_md = row_md + cell_content + '|'
+                                }
+                                table_md+=row_md
+                                if(r == 0){
+                                    let split_attr = '\n|'
+                                    for(let c=0;c< cols.length;c++){// add the attributes underline
+                                        split_attr  = split_attr + '---|'
+                                    }
+                                    table_md+=split_attr
+                                }
+                            }
+                            res = res + table_md + '\n'
+                        }
+                    }
+                    continue;
+                }
+                console.log('Handling  ', child_tag_name,': ', nodes[i])
+                let node_attr =  nodes[i].attributes
+                let inside_content = this.parse_html_to_markdown(nodes[i]);
+                res = res + this.get_markdown_syntax(inside_content, child_tag_name,node_attr, nodes[i]);
             }
             return res
         }
@@ -461,8 +452,26 @@ export class EditorComponent implements AfterViewInit {
             return '\n'
         }
         if( tag_name == 'div'){
+            console.log('attr=',attr)
+            if(attr && !isNullOrUndefined(attr.getNamedItem('style'))){
+                console.log(attr.getNamedItem('style'))
+                let style_align_type = attr.getNamedItem('style').value.toLowerCase();
+                if(style_align_type.indexOf('text-align: justify')>=0){
+                    style_align_type ='justify'
+                }
+                if(style_align_type.indexOf('text-align: left')>=0){
+                    style_align_type ='left'
+                }
+                if(style_align_type.indexOf('text-align: right')>=0){
+                    style_align_type ='right'
+                }
+                if(style_align_type.indexOf('text-align: center')>=0){
+                    style_align_type ='center'
+                }
 
-            return '\n' + text_content
+                return '\n' +`<${style_align_type}>${text_content }</${style_align_type}>`
+            }
+            return '\n' + text_content ;
         }
         if( tag_name == 'p'){
             return '\n' + text_content
