@@ -1,56 +1,92 @@
 <!--icons from:https://docs.flutter.io/flutter/material/Icons-class.html-->
 <body>
 <mat-toolbar class="fixed-toolbar">
-<mat-toolbar-row>
-  <div (click)="about()"><img class="logo" src="../assets/logo.png">  Markdown Editor</div>
+    <mat-toolbar-row>
+        <div (click)="about()"><img class="logo" src="../assets/logo.png"></div>
+        <input type="file" (change)="open_file($event)" file-reader="fileContent"/>
+        <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h1')">H1</button>
+        <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h2')">H2</button>
+        <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h3')">H3</button>
+        <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h4')">H4</button>
+        <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h5')">H5</button>
+        <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h6')">H6</button>
+        <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('p')">p</button>
+        <button mat-mini-fab color='white' class="header-button-row-right" (click)="create_heading('pre')">pre
+        </button>
 
-    <input type="file" (change)="open_file($event)" file-reader="fileContent" />
-    <button mat-icon-button><mat-icon (click)="clean()" >delete</mat-icon></button>
+        <button mat-icon-button (click)="save_and_download()">
+            <mat-icon>save</mat-icon>
+        </button>
 
+        <mat-icon class="example-icon" (click)="about()">favorite</mat-icon>
+        <a href="https://github.com/exhesham/electron-markdown-editor/issues/new" mat-icon-button>
+            <mat-icon class="example-icon">bug_report</mat-icon>
+        </a>
 
+        <button mat-icon-button>
+            <mat-icon (click)="clean()">delete</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon (click)="apply_command( 'insertunorderedlist', null)">format_list_bulleted</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon (click)="apply_command( 'insertorderedlist', null)">format_list_numbered</mat-icon>
+        </button>
 
-    <button mat-icon-button><mat-icon (click)="apply_command( 'insertunorderedlist', null)" >format_list_bulleted</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_command( 'insertorderedlist', null)">format_list_numbered</mat-icon></button>
+        <button mat-icon-button>
+            <mat-icon (click)="apply_command( 'bold', null)">format_bold</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon (click)="apply_command( 'italic', null)">format_italic</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon (click)="apply_command( 'underline', null)">format_underline</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon (click)="apply_command( 'strikeThrough', null)">format_strikethrough</mat-icon>
+        </button>
+        <color-pallate (onColorPicked)="change_color($event)"></color-pallate>
+        <button mat-icon-button>
+            <mat-icon (click)="insert_link()">insert_link</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon (click)="apply_command( 'formatBlock', 'blockquote')">format_quote</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon (click)="apply_command( 'formatBlock', 'pre')">code</mat-icon>
+        </button>
 
-  <button mat-icon-button><mat-icon (click)="apply_command( 'bold', null)">format_bold</mat-icon></button>
-    <button mat-icon-button><mat-icon (click)="apply_command( 'italic', null)">format_italic</mat-icon></button>
-    <button mat-icon-button><mat-icon (click)="apply_command( 'underline', null)">format_underline</mat-icon></button>
-    <button mat-icon-button><mat-icon (click)="apply_command( 'strikeThrough', null)">format_strikethrough</mat-icon></button>
-    <color-pallate (onColorPicked)="change_color($event)"></color-pallate>
-  <button mat-icon-button><mat-icon (click)="insert_link()">insert_link</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_command( 'formatBlock', 'blockquote')">format_quote</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_command( 'formatBlock', 'pre')">code</mat-icon></button>
+        <!--<button mat-icon-button><mat-icon (click)="apply_command( 'underline', null)">insert_emoticon</mat-icon></button>-->
+        <button mat-icon-button>
+            <mat-icon (click)="insert_image()">insert_photo</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon (click)="apply_command( 'undo', null)">undo</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon (click)="apply_command( 'redo', null)">redo</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon (click)="apply_command( 'justifyFull', null)">format_align_justify</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon (click)="apply_command( 'justifyCenter', null)">format_align_center</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon (click)="apply_command( 'justifyLeft', null)">format_align_left</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon (click)="apply_command( 'justifyRight', null)">format_align_right</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon (click)="apply_command( 'removeFormat', null)">format_clear</mat-icon>
+        </button>
+        <button mat-icon-button>
+            <mat-icon (click)="create_table()">grid_on</mat-icon>
+        </button>
 
-  <!--<button mat-icon-button><mat-icon (click)="apply_command( 'underline', null)">insert_emoticon</mat-icon></button>-->
-  <button mat-icon-button><mat-icon (click)="insert_image()">insert_photo</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_command( 'undo', null)">undo</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_command( 'redo', null)">redo</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_command( 'justifyFull', null)">format_align_justify</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_command( 'justifyCenter', null)">format_align_center</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_command( 'justifyLeft', null)">format_align_left</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_command( 'justifyRight', null)">format_align_right</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="apply_command( 'removeFormat', null)">format_clear</mat-icon></button>
-  <button mat-icon-button><mat-icon (click)="create_table()">grid_on</mat-icon></button>
+    </mat-toolbar-row>
 
-  <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h1')">H1</button>
-  <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h2')">H2</button>
-  <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h3')">H3</button>
-  <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h4')">H4</button>
-  <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h5')">H5</button>
-  <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('h6')">H6</button>
-  <button mat-mini-fab color='white' class="header-button-row" (click)="create_heading('p')">p</button>
-  <button mat-mini-fab color='white' class="header-button-row-right" (click)="create_heading('pre')">pre</button>
-
-  <div>
-
-    <mat-form-field>
-      <input matInput value="README.md" maxlength="40"  [(ngModel)]="file_name" >
-    </mat-form-field>
-    <button mat-icon-button (click)="save_and_download()"><mat-icon >save</mat-icon></button>
-  </div>
-    <mat-icon class="example-icon"  (click)="about()">favorite</mat-icon>
-    <a href="https://github.com/exhesham/electron-markdown-editor/issues/new" mat-icon-button><mat-icon class="example-icon"  >bug_report</mat-icon></a>
-</mat-toolbar-row>
 </mat-toolbar>
 
 <ng-container #richtextbox>

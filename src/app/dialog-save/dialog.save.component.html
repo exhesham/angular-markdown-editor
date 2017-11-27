@@ -1,0 +1,11 @@
+
+<div mat-dialog-content>
+    <p>Save File as Markdown</p>
+    <mat-form-field>
+        <input matInput tabindex="1" [(ngModel)]="data.save_as_name">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="data.save_as_name" tabindex="2">Save</button>
+    <button mat-button (click)="onNoClick()" tabindex="-1">No Thanks</button>
+</div>

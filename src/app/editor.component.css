@@ -7,6 +7,7 @@
   position: fixed;
   top: 0;
   left: 0;
+    align-items: center;
   z-index: 2;
   width: 100%
 }
@@ -149,4 +150,8 @@ body {
 .logo {
     width: 32px;
     float: left;
+}
+
+.heading-buttons-toolbar {
+    width:100%;
 }

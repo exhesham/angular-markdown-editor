@@ -42,6 +42,7 @@ import {
 
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {DialogAbout} from "./dialog-about/dialog.about.component";
+import {DialogSaveComponent} from "./dialog-save/dialog.save.component";
 import {ColorPallateComponent} from "./color-pallate/color.pallate.component";
 import {FormsModule} from '@angular/forms';
 import * as showdowntools from 'showdown';
@@ -50,6 +51,12 @@ import * as showdowntools from 'showdown';
     declarations: [
         EditorComponent,
         DialogAbout,
+        DialogSaveComponent,
+        ColorPallateComponent,
+    ],
+    entryComponents:[
+        DialogAbout,
+        DialogSaveComponent,
         ColorPallateComponent,
     ],
     imports: [
@@ -126,7 +133,7 @@ import * as showdowntools from 'showdown';
         MatTooltipModule,
     ],
     providers: [],
-    bootstrap: [EditorComponent, DialogAbout, ColorPallateComponent]
+    bootstrap: [EditorComponent,  ]
 })
 export class AppModule {
 }

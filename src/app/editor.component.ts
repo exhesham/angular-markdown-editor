@@ -13,6 +13,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSelectChange} from '@angula
 import {FormsModule} from '@angular/forms';
 import {isNullOrUndefined} from "util";
 import {DialogAbout} from "./dialog-about/dialog.about.component";
+import {DialogSaveComponent} from "./dialog-save/dialog.save.component";
 interface MSBaseReader { result: any; }
 export enum ElementType {
     tr,
@@ -47,7 +48,8 @@ export class EditorComponent implements AfterViewInit {
 
     @ViewChild('edit')
     public edit: ElementRef;
-    file_name = 'README.md'
+
+
     private main_div: any;
     private tags_need_custom_removal = ['blockquote','code', 'pre'];
 
@@ -442,22 +444,32 @@ export class EditorComponent implements AfterViewInit {
     }
 
     save_and_download(){
-        let file_content = this.parse_html_to_markdown(this.main_div);
-        var data, filename, link;
+        let dialogRef = this.dialog.open(DialogSaveComponent, {
+            data: { save_as_name: 'README.md' }
+        });
+        dialogRef.afterClosed().subscribe(result => {
 
-        if (file_content == null) return;
+            if(isNullOrUndefined(result)){
+                return; // the user cancelled the saving
+            }
 
-        filename = this.file_name || 'README.md';
+            let file_content = this.parse_html_to_markdown(this.main_div);
+            var data, link;
 
-        if (!file_content.match(/^data:text\/md/i)) {
-            file_content = 'data:text/csv;charset=utf-8,' + file_content;
-        }
-        data = encodeURI(file_content);
+            if (file_content == null) return;
 
-        link = document.createElement('a');
-        link.setAttribute('href', data);
-        link.setAttribute('download', filename);
-        link.click();
+            let save_as_name = result;
+
+            if (!file_content.match(/^data:text\/md/i)) {
+                file_content = 'data:text/csv;charset=utf-8,' + file_content;
+            }
+            data = encodeURI(file_content);
+
+            link = document.createElement('a');
+            link.setAttribute('href', data);
+            link.setAttribute('download', save_as_name);
+            link.click();
+        });
     }
 
     about(){
