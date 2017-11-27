@@ -110,7 +110,8 @@ body {
   text-align: left;
   border-radius: 2px;
   display: inline-block;
-  height: 1842px;
+  min-height: 1842px;
+    height:100%;
   margin: 4rem;
   padding-top: 60px;
   padding-left: 50px;
