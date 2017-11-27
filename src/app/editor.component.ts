@@ -128,7 +128,7 @@ export class EditorComponent implements AfterViewInit {
 
 
     create_table() {
-
+        this.main_div.focus();
         // source: https://www-archive.mozilla.org/editor/midasdemo/
         // https://developer.mozilla.org/en-US/docs/Rich-Text_Editing_in_Mozilla#Executing_Commands
         let e = document.getSelection().focusNode;
@@ -151,6 +151,7 @@ export class EditorComponent implements AfterViewInit {
             }
             this.insertNodeAtSelection(e, table);
         }
+        this.main_div.focus();
     }
     insert_image(){
         let imagePath = prompt('Enter Image URL:', 'http://');
@@ -318,29 +319,60 @@ export class EditorComponent implements AfterViewInit {
                 let child_tag_name =isNullOrUndefined(nodes[i].tagName)?nodes[i].parentElement.tagName.toLowerCase():nodes[i].tagName.toLowerCase()
                     nodes[i].parentElement.tagName.toLowerCase()
                 // console.log('child_tag_name =',child_tag_name )
-                if(nodes[i].hasChildNodes() && child_tag_name == 'ol' ){
-                    for(let j = 0;j < nodes[i].childNodes.length;j++){
-                        res = res + attr + '- ' + this.parse_html_to_markdown(nodes[i].childNodes[j], attr+1);
-                    }
-                }else{
-                    if(nodes[i].hasChildNodes() && child_tag_name == 'ul' ){
-                        let prefix = child_tag_name == 'ul'?' * ': attr + '- '
+                if(nodes[i].hasChildNodes()){
+                    if(child_tag_name == 'ol' ){
                         for(let j = 0;j < nodes[i].childNodes.length;j++){
-                            if(!isNullOrUndefined(nodes[i].childNodes[j].tagName) && nodes[i].childNodes[j].tagName.toLowerCase() == 'li'){
-                                res = res + prefix + this.parse_html_to_markdown(nodes[i].childNodes[j])+ '\n';
-                            }
+                            res = res + attr + '- ' + this.parse_html_to_markdown(nodes[i].childNodes[j], attr+1);
                         }
                     }else{
-                        let attr =  nodes[i].attributes
-                        attr =  !isNullOrUndefined(attr) ?attr:nodes[i].parentElement.attributes;
-                        if(nodes[i].hasChildNodes()){
-                            let inside_content = this.parse_html_to_markdown(nodes[i]);
-                            res = res + this.get_markdown_syntax(inside_content, child_tag_name,attr, nodes[i])
+                        if(child_tag_name == 'ul' ){
+                            let prefix = child_tag_name == 'ul'?' * ': attr + '- '
+                            for(let j = 0;j < nodes[i].childNodes.length;j++){
+                                if(!isNullOrUndefined(nodes[i].childNodes[j].tagName) && nodes[i].childNodes[j].tagName.toLowerCase() == 'li'){
+                                    res = res + prefix + this.parse_html_to_markdown(nodes[i].childNodes[j])+ '\n';
+                                }
+                            }
                         }else{
-                            res = res + this.parse_html_to_markdown(nodes[i])
+                            if(child_tag_name == 'table'){
+                                console.log('it is a table!!! nodes[i]=', nodes[i].childNodes);
+                                for(let j=0;j< nodes[i].childNodes.length;j++){ // there should be tbody as a child of table
+                                    if(nodes[i].childNodes[j].tagName && nodes[i].childNodes[j].tagName.toLowerCase() == 'tbody'){
+                                        let rows = nodes[i].childNodes[j].childNodes;
+                                        let table_md = ''
+                                        for(let r=0;r< rows.length;r++){ //scan the rows
+                                            let cols = rows[r].childNodes;
+                                            let row_md = '\n|'
+                                            for(let c=0;c< cols.length;c++){//scan the  columns
+                                                console.log(r,c,cols[c]);
+                                                let cell_content = this.parse_html_to_markdown(cols[c], attr)
+                                                row_md = row_md + cell_content + '|'
+                                            }
+                                            table_md+=row_md
+                                            if(r == 0){
+                                                let split_attr = '\n|'
+                                                for(let c=0;c< cols.length;c++){// add the attributes underline
+                                                    split_attr  = split_attr + '---|'
+                                                }
+                                                table_md+=split_attr
+                                            }
+                                        }
+                                        res = res + table_md + '\n'
+                                    }
+                                }
+
+                            }else{
+                                let attr =  nodes[i].attributes
+                                attr =  !isNullOrUndefined(attr) ?attr:nodes[i].parentElement.attributes;
+                                let inside_content = this.parse_html_to_markdown(nodes[i]);
+                                res = res + this.get_markdown_syntax(inside_content, child_tag_name,attr, nodes[i]);
+                            }
+
                         }
                     }
+                }else{
+                    res = res + this.parse_html_to_markdown(nodes[i])
                 }
+
 
 
             }
