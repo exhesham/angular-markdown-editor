@@ -3,9 +3,17 @@
   border:none;
   outline:none;
 }
+.fixed-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%
+}
 .spacer-icon {
   padding: 0 14px;
 }
+
 
 .title-spacer {
   flex: 1 1 auto;
@@ -16,7 +24,7 @@ blockquote{
   display:block;
   background: #fff;
   padding: 15px 20px 15px 45px;
-  margin: 0 0 20px;
+  margin: 0 0 4rem;
   position: relative;
 
   /*Font*/
@@ -93,6 +101,7 @@ blockquote em{
 body {
   background: #e2e1e0;
   text-align: center;
+  width: 100%;
 }
 
 
@@ -102,7 +111,7 @@ body {
   border-radius: 2px;
   display: inline-block;
   height: 1842px;
-  margin: 1rem;
+  margin: 4rem;
   padding-top: 60px;
   padding-left: 50px;
   padding-right: 50px;

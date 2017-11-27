@@ -1,7 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MarkdownToHtmlModule} from 'ng2-markdown-to-html';
 import {EditorComponent} from './editor.component';
 import {
     MatAutocompleteModule,
@@ -55,7 +54,6 @@ import * as showdowntools from 'showdown';
     ],
     imports: [
         BrowserModule,
-        MarkdownToHtmlModule.forRoot(),
         MatAutocompleteModule,
         MatButtonModule,
 
